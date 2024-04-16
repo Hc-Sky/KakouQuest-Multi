@@ -4,6 +4,8 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import fr.studiokakou.kakouquest.player.OnlinePlayer;
+import fr.studiokakou.kakouquest.player.PlayerList;
+import fr.studiokakou.network.message.ConnectMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ public class GameServer implements Listener {
     public String serverName;
 
     //tableau des joueurs (id, onlinePlayer)
-    Hashtable<Integer, OnlinePlayer> onlinePlayers = new Hashtable<>();
+    public static Hashtable<Integer, OnlinePlayer> onlinePlayers = new Hashtable<>();
 
     public GameServer(){
         this.server = new Server();
@@ -29,7 +31,7 @@ public class GameServer implements Listener {
         this.maxPlayer = GetConfig.getIntProperty("MAX_PLAYER");
         this.serverName = GetConfig.getStringProperty("SERVER_NAME");
 
-        this.onlinePlayers.clear();
+        onlinePlayers.clear();
     }
 
     public void startServer() throws IOException {
@@ -42,6 +44,20 @@ public class GameServer implements Listener {
     }
 
     public void received(Connection connection, Object object) {
+        if (object instanceof ConnectMessage){
+            ConnectMessage connectMessage = (ConnectMessage) object;
+            OnlinePlayer onlinePlayer = connectMessage.player;
+            int id = connectMessage.id;
+            if (onlinePlayers.contains(connection.getID())){
+                onlinePlayers.remove(connection.getID());
+            }
+            onlinePlayers.put(connection.getID(), onlinePlayer);
+
+            for (OnlinePlayer player : onlinePlayers.values()){
+                System.out.println(player.username);
+            }
+        }
+
         if (object instanceof OnlinePlayer){
             OnlinePlayer player = (OnlinePlayer) object;
             onlinePlayers.replace(connection.getID(), player);
@@ -50,24 +66,27 @@ public class GameServer implements Listener {
         }
     }
 
-    public void connected(Connection connection) {
-        if (this.onlinePlayers.contains(connection.getID())){
-            this.onlinePlayers.remove(connection.getID());
-        }
-        this.onlinePlayers.put(connection.getID(), null);
-    }
-
-    public void disconnected(Connection connection) {
-        this.onlinePlayers.remove(connection.getID());
-    }
+//    public void disconnected(Connection connection) {
+//        onlinePlayers.remove(connection.getID());
+//    }
 
     public void sendAllExcept(int id){
         Enumeration<Integer> keys = onlinePlayers.keys();
+        PlayerList playerList = new PlayerList();
 
         while(keys.hasMoreElements()) {
             Integer key = keys.nextElement();
             if (id != key){
-                server.sendToTCP(key, onlinePlayers);
+                playerList.onlinePlayersArrayList.add(onlinePlayers.get(key));
+            }
+        }
+
+
+        keys = onlinePlayers.keys();
+        while(keys.hasMoreElements()) {
+            Integer key = keys.nextElement();
+            if (id != key){
+                server.sendToTCP(key, playerList);
             }
         }
     }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.esotericsoftware.kryonet.Connection;
 import fr.studiokakou.kakouquest.map.Point;
+import fr.studiokakou.kakouquest.network.GameClient;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
@@ -15,6 +16,9 @@ import java.time.LocalDateTime;
 public class OnlinePlayer {
     //server info
     public Connection connection;
+    public int id;
+
+    public String username;
 
     public Point pos; // The current position of the player
     Point lastPos; // The last position of the player
@@ -56,7 +60,10 @@ public class OnlinePlayer {
     public OnlinePlayer() {}
 
     public OnlinePlayer(Player player){
-        this.connection = OnlineGameScreen.connection;
+        this.connection = GameClient.connection;
+        this.id = GameClient.connection.getID();
+
+        this.username = OnlineGameScreen.username;
 
         this.pos = player.pos;
         this.lastPos = player.lastPos;

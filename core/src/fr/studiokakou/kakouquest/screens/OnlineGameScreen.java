@@ -11,6 +11,7 @@ import com.esotericsoftware.kryonet.Connection;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
+import fr.studiokakou.kakouquest.network.GameClient;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.OnlinePlayer;
 import fr.studiokakou.kakouquest.player.OnlinePlayerConstants;
@@ -21,8 +22,10 @@ import java.util.ArrayList;
 public class OnlineGameScreen implements Screen {
 
     //network infos
-    public static Connection connection;
-    public int id;
+    public GameClient gameClient;
+    public String ipAdress = "localhost";
+    public int port = 8215;
+    public int udp = 8216;
 
     //main player info
     public static String username = "swann";
@@ -40,12 +43,14 @@ public class OnlineGameScreen implements Screen {
 
     //players
     public Player player;
-    public ArrayList<OnlinePlayer> onlinePlayers = new ArrayList<>();
+    public static ArrayList<OnlinePlayer> onlinePlayers = new ArrayList<>();
 
     // Temps écoulé depuis le début du jeu pour les animations.
     public static float stateTime=0f;
 
     public OnlineGameScreen(GameSpace game){
+        OnlinePlayerConstants.animationInit();
+
         this.game=game;
         this.batch = game.batch;
         this.hudBatch = game.hudBatch;
@@ -56,10 +61,16 @@ public class OnlineGameScreen implements Screen {
         this.player = new Player(new Point(100, 100));
         this.cam = new Camera(this.player);
 
+
+        gameClient = new GameClient(ipAdress, port, udp, player);
+
     }
 
     @Override
     public void show() {
+
+        gameClient.startClient();
+
         OnlineGameScreen.stateTime=0f;
         Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
