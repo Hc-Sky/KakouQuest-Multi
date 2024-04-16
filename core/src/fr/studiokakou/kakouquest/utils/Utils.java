@@ -7,10 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
+import fr.studiokakou.kakouquest.constants.Constants;
 import fr.studiokakou.kakouquest.map.Point;
-import fr.studiokakou.kakouquest.screens.InGameScreen;
-
-import java.util.Random;
 
 /**
  * Classe utilitaire.
@@ -43,7 +41,7 @@ public class Utils {
             }
         }
 
-        return new Animation<TextureRegion>(InGameScreen.FRAME_DURATION, textureRegions);
+        return new Animation<TextureRegion>(Constants.FRAME_DURATION, textureRegions);
     }
 
     /**
@@ -126,7 +124,7 @@ public class Utils {
             }
         }
 
-        return new Animation<TextureRegion>(InGameScreen.FRAME_DURATION, textureRegions);
+        return new Animation<TextureRegion>(Constants.FRAME_DURATION, textureRegions);
     }
 
     /**

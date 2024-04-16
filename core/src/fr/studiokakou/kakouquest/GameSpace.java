@@ -1,12 +1,10 @@
 package fr.studiokakou.kakouquest;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
-import fr.studiokakou.kakouquest.screens.InGameScreen;
-import fr.studiokakou.kakouquest.screens.SplashScreen;
+import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 
 /**
  * La classe GameSpace représente l'application principale du jeu.
@@ -26,28 +24,20 @@ public class GameSpace extends Game {
 	public long startTime;
 
 	/**
-	 * L'écran de démarrage du jeu.
-	 */
-	public SplashScreen splashScreen;
-
-
-	public BitmapFont font;
-
-
-	/**
 	 * Méthode appelée lors de la création de l'application.
 	 */
 	@Override
 	public void create() {
-		// Mise à jour des raccourcis clavier
+
 		Keybinds.updateKeys();
 
 		batch = new SpriteBatch();
 		hudBatch = new SpriteBatch();
+
 		startTime = TimeUtils.millis();
 
-		// Définition de l'écran initial du jeu (écran de jeu ou écran de démarrage)
-		this.setScreen(new InGameScreen(this));
+
+		this.setScreen(new OnlineGameScreen(this));
 	}
 
 	/**
