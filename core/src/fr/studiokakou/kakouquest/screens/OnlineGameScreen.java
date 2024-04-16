@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class OnlineGameScreen implements Screen {
 
     //network infos
-    public Connection connection;
+    public static Connection connection;
     public int id;
 
     //main player info
