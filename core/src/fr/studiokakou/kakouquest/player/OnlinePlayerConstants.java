@@ -3,6 +3,7 @@ package fr.studiokakou.kakouquest.player;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 
 import java.util.ArrayList;
@@ -20,8 +21,8 @@ public class OnlinePlayerConstants {
     public static Animation<TextureRegion> spawnAnimation;
     public static Animation<TextureRegion> bloodEffect;
 
-    public static void drawOnlinePlayers(ArrayList<OnlinePlayer> onlinePlayers, SpriteBatch batch){
-        for (OnlinePlayer onlinePlayer : onlinePlayers){
+    public static void drawOnlinePlayers(SpriteBatch batch){
+        for (OnlinePlayer onlinePlayer : OnlineGameScreen.onlinePlayers){
             onlinePlayer.draw(batch);
         }
     }

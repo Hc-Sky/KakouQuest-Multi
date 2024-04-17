@@ -6,8 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.TimeUtils;
-import com.esotericsoftware.kryonet.Connection;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
@@ -18,6 +16,7 @@ import fr.studiokakou.kakouquest.player.OnlinePlayerConstants;
 import fr.studiokakou.kakouquest.player.Player;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class OnlineGameScreen implements Screen {
 
@@ -28,7 +27,7 @@ public class OnlineGameScreen implements Screen {
     public int udp = 8216;
 
     //main player info
-    public static String username = "swann";
+    public static String username = "default";
     public Camera cam;
 
     //écran original utilisé pour dessiner
@@ -49,6 +48,11 @@ public class OnlineGameScreen implements Screen {
     public static float stateTime=0f;
 
     public OnlineGameScreen(GameSpace game){
+        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+        System.out.println("Enter username");
+
+        username = myObj.nextLine();
+
         OnlinePlayerConstants.animationInit();
 
         this.game=game;
@@ -102,7 +106,7 @@ public class OnlineGameScreen implements Screen {
 
         batch.begin();
 
-        OnlinePlayerConstants.drawOnlinePlayers(onlinePlayers, batch);
+        OnlinePlayerConstants.drawOnlinePlayers(batch);
 
         player.draw(this.batch);
 

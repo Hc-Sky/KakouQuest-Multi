@@ -47,11 +47,11 @@ public class GameServer implements Listener {
         if (object instanceof ConnectMessage){
             ConnectMessage connectMessage = (ConnectMessage) object;
             OnlinePlayer onlinePlayer = connectMessage.player;
-            int id = connectMessage.id;
-            if (onlinePlayers.contains(connection.getID())){
-                onlinePlayers.remove(connection.getID());
+            int id = connection.getID();
+            if (onlinePlayers.contains(id)){
+                onlinePlayers.remove(id);
             }
-            onlinePlayers.put(connection.getID(), onlinePlayer);
+            onlinePlayers.put(id, onlinePlayer);
 
             for (OnlinePlayer player : onlinePlayers.values()){
                 System.out.println(player.username);
@@ -62,9 +62,7 @@ public class GameServer implements Listener {
             OnlinePlayer player = (OnlinePlayer) object;
             onlinePlayers.replace(connection.getID(), player);
 
-            System.out.println("recevied player "+player.username);
-
-            sendAllExcept(connection.getID());
+            sendAll();
         }
     }
 
@@ -83,13 +81,32 @@ public class GameServer implements Listener {
             }
         }
 
+        System.out.println(playerList.onlinePlayersArrayList);
 
         keys = onlinePlayers.keys();
         while(keys.hasMoreElements()) {
             Integer key = keys.nextElement();
             if (id != key){
                 server.sendToTCP(key, playerList);
+                System.out.println("sent to "+id);
             }
+        }
+    }
+
+    public void sendAll(){
+        Enumeration<Integer> keys = onlinePlayers.keys();
+        PlayerList playerList = new PlayerList();
+
+        while(keys.hasMoreElements()) {
+            Integer key = keys.nextElement();
+            playerList.onlinePlayersArrayList.add(onlinePlayers.get(key));
+        }
+
+        keys = onlinePlayers.keys();
+        while(keys.hasMoreElements()) {
+            Integer key = keys.nextElement();
+            server.sendToTCP(key, playerList);
+            System.out.println("sent players to "+onlinePlayers.get(key).username + " id : "+key);
         }
     }
 }
