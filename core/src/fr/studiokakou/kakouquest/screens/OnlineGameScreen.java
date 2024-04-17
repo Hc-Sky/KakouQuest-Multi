@@ -64,21 +64,17 @@ public class OnlineGameScreen implements Screen {
 
         gameClient = new GameClient(ipAdress, port, udp, player);
 
+        gameClient.startClient();
+
     }
 
     @Override
     public void show() {
 
-        gameClient.startClient();
-
         OnlineGameScreen.stateTime=0f;
         Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
         pm.dispose();
-
-        onlinePlayers.add(OnlinePlayerConstants.mainToOnlinePlayer(new Player(new Point(110, 110))));
-
-        onlinePlayers.get(0).hasPlayerSpawn=true;
 
         player.hasPlayerSpawn=true;
     }
@@ -97,6 +93,8 @@ public class OnlineGameScreen implements Screen {
 
         player.getKeyboardMove(this.map);
         player.getOrientation();
+
+        gameClient.sendPlayer(player);
 
         cam.update();
 

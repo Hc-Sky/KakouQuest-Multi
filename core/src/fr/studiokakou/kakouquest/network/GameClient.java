@@ -26,12 +26,12 @@ public class GameClient implements Listener {
     public static Connection connection;
     public static int ID;
 
-    Thread clientThread;
+    //Thread clientThread;
 
     public GameClient(String ipAdress, int tcp_port, int udp_port, Player player){
         this.player = player;
         this.client = new Client();
-        this.clientThread = new Thread(client);
+        //this.clientThread = new Thread(client);
 
         this.ipAdress = ipAdress;
         this.port = tcp_port;
@@ -39,7 +39,8 @@ public class GameClient implements Listener {
     }
 
     public void startClient() {
-        clientThread.start();
+        //clientThread.start();
+        client.start();
 
         try {
             client.connect(5000, ipAdress, port, udp);
@@ -65,6 +66,11 @@ public class GameClient implements Listener {
     }
 
     public void sendPlayer(Player player){
-        client.sendTCP(OnlinePlayerConstants.mainToOnlinePlayer(player));
+        try {
+            client.sendTCP(OnlinePlayerConstants.mainToOnlinePlayer(player));
+            System.out.println("player sent");
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 }

@@ -62,6 +62,8 @@ public class GameServer implements Listener {
             OnlinePlayer player = (OnlinePlayer) object;
             onlinePlayers.replace(connection.getID(), player);
 
+            System.out.println("recevied player "+player.username);
+
             sendAllExcept(connection.getID());
         }
     }
