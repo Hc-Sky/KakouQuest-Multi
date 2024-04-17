@@ -97,6 +97,8 @@ public class OnlineGameScreen implements Screen {
 
         player.getKeyboardMove(this.map);
         player.getOrientation();
+        player.dash(this.map);
+
 
         gameClient.sendPlayer(player);
 

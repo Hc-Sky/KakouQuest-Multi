@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import fr.studiokakou.kakouquest.constants.Constants;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.map.Floor;
@@ -43,8 +44,32 @@ public class Player {
     LocalDateTime dashTimer;
     float dashStateTime;
 
+    //dash stats
+    static float DASH_DISTANCE = 50f;
+    /**
+     * la vitesse du dash.
+     */
+    static float DASH_SPEED = 500f;
+    /**
+     * la pause entre les dashs.
+     */
+    static long DASH_PAUSE = 3;   //en secondes
+    /**
+     * la stamina utilisée pour dash.
+     */
+    static int DASH_STAMINA_USAGE = 10;
+
 
     //attack vars
+    public static float PLAYER_MELEE_WEAPON_DISTANCE=10f;
+    /**
+     * la pause entre les attaques.
+     */
+    public static float ATTACK_PAUSE = 200f; //en millisecondes
+    /**
+     * la stamina utilisée pour attaquer.
+     */
+    static int ATTACK_STAMINA_USAGE = 2;
     LocalDateTime staminaTimer;
     LocalDateTime attackTimer;
     public boolean isAttacking=false;
@@ -128,6 +153,61 @@ public class Player {
         }
     }
 
+    public void dash(Map map){    //used for the dash animation
+        if (this.isDashing){
+            if (this.dashFinalPoint == null && this.dashOrientation==null){
+                Point mousePos = Utils.mousePosUnproject(Camera.camera);
+                this.dashFinalPoint = Utils.getPointDirection(this.pos, mousePos, Player.DASH_DISTANCE);
+                this.dashStartPoint = this.pos;
+                this.dashOrientation = Point.getOrientation(this.pos, this.dashFinalPoint);
+                this.dashTimer = LocalDateTime.now();
+                this.dashStateTime = 0f;
+            }else {
+                if (this.dashTimer.plusSeconds(1).isBefore(LocalDateTime.now())) {
+                    this.isDashing=false;
+                }
+
+                if (this.dashOrientation==null){
+                    this.isDashing = false;
+                    this.dashFinalPoint=null;
+                    this.dashStartPoint=null;
+                } else if (!Point.isPointExceeded(this.pos, this.dashFinalPoint, this.dashOrientation)){
+                    assert this.dashFinalPoint != null;
+                    Point nextPos = Utils.getPointDirection(this.pos, this.dashFinalPoint, Player.DASH_SPEED*Gdx.graphics.getDeltaTime());
+
+                    boolean canMove1 = true;
+
+                    if (canMove(new Point(this.pos.x, nextPos.y), map)){
+                        this.pos = new Point(this.pos.x, nextPos.y);
+                    } else {
+                        canMove1=false;
+                    }
+                    if (canMove(new Point(nextPos.x, this.pos.y), map)){
+                        this.pos = new Point(nextPos.x, this.pos.y);
+                    } else if (!canMove1) {
+                        this.isDashing=false;
+                    }
+                } else {
+                    this.isDashing=false;
+                    this.dashFinalPoint=null;
+                    this.dashStartPoint=null;
+                    this.dashOrientation=null;
+                }
+            }
+        } else if (!this.canDash && this.dashTimer.plusSeconds(Player.DASH_PAUSE).isBefore(LocalDateTime.now())) {
+            this.dashStartPoint=null;
+            this.dashOrientation=null;
+            this.canDash=true;
+        } else if (Gdx.input.isKeyJustPressed(Keybinds.DASH_KEY) && this.canDash && this.canActionWithStamina(10)) {
+            this.canDash=false;
+            this.isDashing=true;
+            this.stamina-=Player.DASH_STAMINA_USAGE;
+            this.staminaTimer = LocalDateTime.now();
+        }
+
+    }
+
+
     public boolean canMove(Point newPos, Map map){
         return true;
     }
@@ -168,6 +248,33 @@ public class Player {
             this.attackDirection = Utils.mousePosUnproject(Camera.camera);
             this.attackRotation = Utils.getAngleWithPoint(this.center(), this.attackDirection)-this.currentWeapon.attackRange/2;
             this.attackEndRotation = this.attackRotation+this.currentWeapon.attackRange;
+        }
+    }
+
+
+
+    /**
+     * Permet d'afficher l'attaque du joueur.
+     *
+     * @param batch the batch
+     */
+    public void showAttack(SpriteBatch batch){
+        if (this.attackRotation <= this.attackEndRotation){
+            this.attackPos = Point.getPosWithAngle(this.center(), Player.PLAYER_MELEE_WEAPON_DISTANCE, this.attackRotation);
+
+            this.currentWeapon.sprite.setPosition(this.attackPos.x-this.currentWeapon.width/2, this.attackPos.y);
+            this.currentWeapon.sprite.setRotation(this.attackRotation-90f);
+
+            this.currentWeapon.sprite.draw(batch);
+
+            this.attackRotation += this.currentWeapon.attackSpeed*Gdx.graphics.getDeltaTime()*1000;
+            this.attackPos = Point.getPosWithAngle(this.center(), Player.PLAYER_MELEE_WEAPON_DISTANCE, this.attackRotation);
+        }else if (this.attackTimer==null){
+            this.isAttacking = false;
+            this.attackTimer = LocalDateTime.now();
+        } else if (this.attackTimer.plusNanos((long) (Player.ATTACK_PAUSE*1000000)).isBefore(LocalDateTime.now())) {
+            this.canAttack=true;
+            this.attackTimer=null;
         }
     }
 
@@ -253,6 +360,10 @@ public class Player {
 
             if (this.bloodEffect.isAnimationFinished(bloodStateTime)) {
                 this.bloodStateTime = -1;
+            }
+
+            if (!this.canAttack) {
+                this.showAttack(batch);
             }
 
         }
