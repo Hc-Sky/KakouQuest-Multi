@@ -99,7 +99,6 @@ public class OnlineGameScreen implements Screen {
         player.getOrientation();
         player.dash(this.map);
 
-
         gameClient.sendPlayer(player);
 
         cam.update();

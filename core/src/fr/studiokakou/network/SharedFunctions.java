@@ -6,6 +6,7 @@ import fr.studiokakou.kakouquest.player.OnlinePlayer;
 import fr.studiokakou.kakouquest.player.PlayerList;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 import fr.studiokakou.network.message.ConnectMessage;
+import fr.studiokakou.network.message.IdMessage;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,5 +21,6 @@ public class SharedFunctions {
         kryo.register(LocalDateTime.class);
         kryo.register(Point.class);
         kryo.register(ArrayList.class);
+        kryo.register(IdMessage.class);
     }
 }
