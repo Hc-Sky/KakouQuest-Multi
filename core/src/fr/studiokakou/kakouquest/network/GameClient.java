@@ -8,6 +8,7 @@ import fr.studiokakou.kakouquest.player.OnlinePlayerConstants;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.player.PlayerList;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
+import fr.studiokakou.network.SharedFunctions;
 import fr.studiokakou.network.message.ConnectMessage;
 
 import java.io.IOException;
@@ -23,15 +24,14 @@ public class GameClient implements Listener {
 
     Player player;
 
-    public static Connection connection;
-    public static int ID;
-
     //Thread clientThread;
 
     public GameClient(String ipAdress, int tcp_port, int udp_port, Player player){
         this.player = player;
         this.client = new Client();
         //this.clientThread = new Thread(client);
+
+        SharedFunctions.getSharedRegister(client.getKryo());
 
         this.ipAdress = ipAdress;
         this.port = tcp_port;
@@ -58,8 +58,13 @@ public class GameClient implements Listener {
     }
 
     public void received(Connection connection, Object object) {
+        System.out.println("received");
         if (object instanceof PlayerList) {
             PlayerList playerList = (PlayerList) object;
+
+            for (OnlinePlayer onlinePlayer : playerList.onlinePlayersArrayList){
+                System.out.println(onlinePlayer.username);
+            }
 
             OnlineGameScreen.onlinePlayers = playerList.onlinePlayersArrayList;
         }
@@ -68,7 +73,6 @@ public class GameClient implements Listener {
     public void sendPlayer(Player player){
         try {
             client.sendTCP(OnlinePlayerConstants.mainToOnlinePlayer(player));
-            System.out.println("player sent");
         } catch (Exception e){
             System.out.println(e.getMessage());
         }

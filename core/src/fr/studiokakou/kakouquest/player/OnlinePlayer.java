@@ -14,10 +14,6 @@ import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 import java.time.LocalDateTime;
 
 public class OnlinePlayer {
-    //server info
-    public Connection connection;
-    public int id;
-
     public String username;
 
     public Point pos; // The current position of the player
@@ -31,9 +27,6 @@ public class OnlinePlayer {
     public float speed; // The speed of the player
     public float stamina; // The stamina of the player
     public int max_stamina; // The maximum stamina of the player
-
-    //l'arme actuelle
-    public MeleeWeapon currentWeapon;
 
     //dash infos
     boolean isDashing = false;
@@ -60,9 +53,6 @@ public class OnlinePlayer {
     public OnlinePlayer() {}
 
     public OnlinePlayer(Player player){
-        this.connection = GameClient.connection;
-        this.id = GameClient.connection.getID();
-
         this.username = OnlineGameScreen.username;
 
         this.pos = player.pos;
@@ -73,8 +63,6 @@ public class OnlinePlayer {
         this.strength = player.strength;
         this.stamina=player.stamina;
         this.max_stamina=player.max_stamina;
-
-        this.currentWeapon=player.currentWeapon;
 
         this.isDashing=player.isDashing;
         this.canDash=player.canDash;
@@ -105,45 +93,44 @@ public class OnlinePlayer {
 
     public void draw(SpriteBatch batch) {
 
-        if (hasPlayerSpawn) {
-            TextureRegion currentFrame;
-            if (this.isRunning) {
-                if (!flip && this.lastPos.x > this.pos.x) {
-                    currentFrame = OnlinePlayerConstants.runAnimationRevert.getKeyFrame(OnlineGameScreen.stateTime, true);
-                } else if (flip && this.lastPos.x < this.pos.x) {
-                    currentFrame = OnlinePlayerConstants.runAnimationRevert.getKeyFrame(OnlineGameScreen.stateTime, true);
-                } else {
-                    currentFrame = OnlinePlayerConstants.runAnimation.getKeyFrame(OnlineGameScreen.stateTime, true);
-                }
+        TextureRegion currentFrame;
+        if (this.isRunning) {
+            if (!flip && this.lastPos.x > this.pos.x) {
+                currentFrame = OnlinePlayerConstants.runAnimationRevert.getKeyFrame(OnlineGameScreen.stateTime, true);
+            } else if (flip && this.lastPos.x < this.pos.x) {
+                currentFrame = OnlinePlayerConstants.runAnimationRevert.getKeyFrame(OnlineGameScreen.stateTime, true);
             } else {
-                currentFrame = OnlinePlayerConstants.idleAnimation.getKeyFrame(OnlineGameScreen.stateTime, true);
+                currentFrame = OnlinePlayerConstants.runAnimation.getKeyFrame(OnlineGameScreen.stateTime, true);
             }
-
-            //dash animation
-            if (!this.canDash && this.dashOrientation != null && !OnlinePlayerConstants.dashAnimation.isAnimationFinished(this.dashStateTime)) {
-                this.dashStateTime += Gdx.graphics.getDeltaTime();
-                TextureRegion currentDashFrame = OnlinePlayerConstants.dashAnimation.getKeyFrame(this.dashStateTime, false);
-                batch.draw(currentDashFrame, this.dashOrientation.x >= 0 ? this.dashStartPoint.x - (float) currentDashFrame.getRegionWidth() / 4 : this.dashStartPoint.x + (float) currentDashFrame.getRegionWidth() / 2, this.dashStartPoint.y, this.dashOrientation.x >= 0 ? (float) currentDashFrame.getRegionWidth() / 2 : (float) -currentDashFrame.getRegionWidth() / 2, (float) currentDashFrame.getRegionHeight() / 2);
-            }
-            batch.draw(currentFrame, flip ? this.pos.x + this.texture_width : this.pos.x, this.pos.y, this.flip ? -this.texture_width : this.texture_width, this.texture_height);
-
-            //blood animation
-            if (bloodStateTime >= 0) {
-                bloodStateTime += Gdx.graphics.getDeltaTime();
-                TextureRegion currentBloodFrame = OnlinePlayerConstants.bloodEffect.getKeyFrame(bloodStateTime, false);
-                batch.draw(currentBloodFrame,
-                        this.pos.x - (float) currentBloodFrame.getRegionWidth() / 4 + (float) this.texture_width / 2,
-                        this.pos.y - (float) currentBloodFrame.getRegionHeight() / 4 + (float) this.texture_height / 2,
-                        (float) currentBloodFrame.getRegionWidth() / 2,
-                        (float) currentBloodFrame.getRegionHeight() / 2
-                );
-            }
-
-            if (OnlinePlayerConstants.bloodEffect.isAnimationFinished(bloodStateTime)) {
-                this.bloodStateTime = -1;
-            }
-
+        } else {
+            currentFrame = OnlinePlayerConstants.idleAnimation.getKeyFrame(OnlineGameScreen.stateTime, true);
         }
+
+        //dash animation
+        if (!this.canDash && this.dashOrientation != null && !OnlinePlayerConstants.dashAnimation.isAnimationFinished(this.dashStateTime)) {
+            this.dashStateTime += Gdx.graphics.getDeltaTime();
+            TextureRegion currentDashFrame = OnlinePlayerConstants.dashAnimation.getKeyFrame(this.dashStateTime, false);
+            batch.draw(currentDashFrame, this.dashOrientation.x >= 0 ? this.dashStartPoint.x - (float) currentDashFrame.getRegionWidth() / 4 : this.dashStartPoint.x + (float) currentDashFrame.getRegionWidth() / 2, this.dashStartPoint.y, this.dashOrientation.x >= 0 ? (float) currentDashFrame.getRegionWidth() / 2 : (float) -currentDashFrame.getRegionWidth() / 2, (float) currentDashFrame.getRegionHeight() / 2);
+        }
+
+        batch.draw(currentFrame, flip ? this.pos.x + this.texture_width : this.pos.x, this.pos.y, this.flip ? -this.texture_width : this.texture_width, this.texture_height);
+
+        //blood animation
+        if (bloodStateTime >= 0) {
+            bloodStateTime += Gdx.graphics.getDeltaTime();
+            TextureRegion currentBloodFrame = OnlinePlayerConstants.bloodEffect.getKeyFrame(bloodStateTime, false);
+            batch.draw(currentBloodFrame,
+                    this.pos.x - (float) currentBloodFrame.getRegionWidth() / 4 + (float) this.texture_width / 2,
+                    this.pos.y - (float) currentBloodFrame.getRegionHeight() / 4 + (float) this.texture_height / 2,
+                    (float) currentBloodFrame.getRegionWidth() / 2,
+                    (float) currentBloodFrame.getRegionHeight() / 2
+            );
+        }
+
+        if (OnlinePlayerConstants.bloodEffect.isAnimationFinished(bloodStateTime)) {
+            this.bloodStateTime = -1;
+        }
+
     }
 
 }
