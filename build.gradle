@@ -57,6 +57,7 @@ project(":core") {
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
+        implementation 'com.github.crykn:kryonet:2.22.9'
         
     }
 }

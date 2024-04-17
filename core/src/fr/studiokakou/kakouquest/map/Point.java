@@ -16,13 +16,8 @@ public class Point {
      */
     public float y;
 
-    /**
-     * Constructeur de Point.
-     * Sert à créer un objet Point.
-     *
-     * @param x the x
-     * @param y the y
-     */
+    public Point(){}
+
     public Point(float x, float y){
         this.x=x;
         this.y=y;

@@ -1,12 +1,6 @@
 package fr.studiokakou.kakouquest.map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import fr.studiokakou.kakouquest.entity.Monster;
-import fr.studiokakou.kakouquest.interactive.Chest;
-import fr.studiokakou.kakouquest.interactive.OnGroundMeleeWeapon;
-import fr.studiokakou.kakouquest.interactive.Stairs;
-import fr.studiokakou.kakouquest.player.Player;
-import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 
 import java.util.ArrayList;
@@ -25,25 +19,7 @@ public class Map {
      * The floors of the map. It is a list of floors.
      */
     public ArrayList<Floor> floors = new ArrayList<>();
-    /**
-     * The list of monsters.
-     */
-    public static ArrayList<Monster> monsters = new ArrayList<>();
-    /**
-     * The list of chests.
-     */
-    ArrayList<Chest> chests = new ArrayList<>();
-    /**
-     * The list of melee weapons on the ground.
-     */
-    public static ArrayList<OnGroundMeleeWeapon> onGroundMeleeWeapons = new ArrayList<>();
-    /**
-     * The stairs of the map.
-     */
-    public Stairs stairs;
-    /**
-     * The height of the map.
-     */
+
     public int map_height;
     /**
      * The width of the map.
@@ -106,7 +82,6 @@ public class Map {
      * @see Map#genFloors()
      */
     public void initMap(){
-        Map.onGroundMeleeWeapons.clear();
 
         generateRooms();
 
@@ -119,17 +94,6 @@ public class Map {
         this.genWalls();
 
         this.getRealSize();
-    }
-
-    /**
-     * Updates hit animations.
-     *
-     * @param batch the sprite batch
-     */
-    public void updateHitsAnimation(SpriteBatch batch){
-        for (Monster m : Map.monsters){
-            m.updateHitAnimation(batch);
-        }
     }
 
     /**
@@ -169,50 +133,6 @@ public class Map {
         for (Wall w : this.walls){
             w.draw(batch);
         }
-    }
-
-    /**
-     * Draws monsters.
-     *
-     * @param batch the sprite batch
-     */
-    public void drawMonsters(SpriteBatch batch){
-        for (Monster m : Map.monsters){
-            m.draw(batch);
-        }
-    }
-
-    /**
-     * Draws interactive objects.
-     *
-     * @param batch the sprite batch
-     */
-    public void drawInteractive(SpriteBatch batch){
-        for (Chest chest : this.chests){
-            chest.draw(batch);
-        }
-
-        this.stairs.draw(batch);
-
-        for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
-            weapon.draw(batch);
-        }
-    }
-
-    /**
-     * Checks for dead monsters and removes them.
-     */
-    public void checkDeadMonster(){
-        ArrayList<Monster> tmp = new ArrayList<>();
-        for (Monster m : Map.monsters){
-            if (!m.isDead){
-                tmp.add(m);
-            }
-        }
-
-        Map.monsters.clear();
-        Map.monsters = tmp;
-
     }
 
     /**
@@ -270,56 +190,9 @@ public class Map {
         return this.rooms.get(0).getCenterOutOfMap();
     }
 
-    /**
-     * Spawns monsters.
-     *
-     * @param currentLevel the current level
-     */
-    public void spawnMonsters(int currentLevel){
-        Map.monsters.clear();
-        ArrayList<Integer> randomRarity = new ArrayList<>();
 
-        float tmp_current_level = (float) currentLevel /3;
-        if (tmp_current_level<1){
-            tmp_current_level=1;
-        }
 
-        for (int i = 1; i <= tmp_current_level; i++) {
-            for (int j = 0; j <= tmp_current_level-i; j++) {
-                if (Monster.possibleMonsters.get(i)!=null){
-                    randomRarity.add(i);
-                }
-            }
-        }
 
-        for (Room r : this.rooms.subList(1, this.rooms.size())){
-            for (int i = (int) r.start.x+1; i < r.end.x-1; i++) {
-                if (Utils.randint(0, 7)==0){
-                    int rarity = randomRarity.get(Utils.randint(0, randomRarity.size() - 1));
-                    ArrayList<Monster> mList = Monster.possibleMonsters.get(rarity);
-                    while ( mList==null || mList.isEmpty()){
-                        rarity = randomRarity.get(Utils.randint(0, randomRarity.size() - 1));
-                        mList = Monster.possibleMonsters.get(rarity);
-                    }
-                    Monster m = mList.get(Utils.randint(0, mList.size()-1));
-                    m.place(new Point(i*Floor.TEXTURE_WIDTH, Utils.randint((int) r.start.y+1, (int) r.end.y-1)*Floor.TEXTURE_HEIGHT));
-                    Map.monsters.add(m);
-                    Monster.createPossibleMonsters(currentLevel);
-                }
-            }
-        }
-    }
-
-    /**
-     * Moves monsters towards the player.
-     *
-     * @param player the player
-     */
-    public void moveMonsters(Player player){
-        for (Monster m : Map.monsters){
-            m.move(player, this);
-        }
-    }
 
     /**
      * Sorts rooms by distance.
@@ -339,90 +212,6 @@ public class Map {
         this.rooms.clear();
 
         this.rooms = sortedRooms;
-    }
-
-    /**
-     * Generates interactive objects like chests and stairs.
-     *
-     * @param currentLevel the current level
-     * @param gameScreen   the game screen
-     */
-    public void genInteractive(int currentLevel, InGameScreen gameScreen){
-
-        this.stairs = new Stairs(this.rooms.get(this.rooms.size()-1).getCenterOutOfMapPos(), gameScreen);
-
-        this.chests.clear();
-        for (Room r : rooms.subList(1, rooms.size()-1)){
-            if (Utils.randint(1, 5) == 1){
-                if (!this.stairs.pos.equals(r.getCenterOutOfMapPos())){
-                    this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Updates interactive objects.
-     *
-     * @param player the player
-     */
-    public void updateInteractive(Player player){
-        this.distances.clear();
-
-        TreeMap<Float, Object> sorted = getDistances(player);
-
-        Object closestObject = sorted.get(sorted.firstKey());
-
-        //update functions
-        for (Chest chest : this.chests){
-            chest.refreshInteract(player, chest == closestObject);
-        }
-        this.stairs.refreshInteract(player, this.stairs == closestObject);
-        for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
-            weapon.refreshInteract(player, weapon == closestObject);
-        }
-    }
-
-    /**
-     * Calculates distances from player to interactive objects.
-     *
-     * @param player the player
-     * @return a sorted map of distances
-     */
-    public TreeMap<Float, Object> getDistances(Player player){
-        for (Chest chest : this.chests){
-            this.distances.put(Utils.getDistance(chest.pos, player.pos), chest);
-        }
-        this.distances.put(Utils.getDistance(this.stairs.pos, player.pos), this.stairs);
-        for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
-            this.distances.put(Utils.getDistance(weapon.pos, player.pos), weapon);
-        }
-
-        return new TreeMap<>(this.distances);
-    }
-
-    /**
-     * Updates the removal of interactive objects.
-     */
-    public void updateRemoveInteractive(){
-        ArrayList<OnGroundMeleeWeapon> toRemove = new ArrayList<>();
-        ArrayList<OnGroundMeleeWeapon> toAdd = new ArrayList<>();
-
-        for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
-            if (weapon.toDelete){
-                toRemove.add(weapon);
-            }
-            if (weapon.toAdd!=null){
-                toAdd.add(weapon.toAdd);
-            }
-        }
-
-        Map.onGroundMeleeWeapons.addAll(toAdd);
-
-        for (OnGroundMeleeWeapon weapon : toRemove){
-            Map.onGroundMeleeWeapons.remove(weapon);
-        }
     }
 
     /**

@@ -1,7 +1,6 @@
 package fr.studiokakou.kakouquest.map;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Bridge {
     public ArrayList<Point> points;
