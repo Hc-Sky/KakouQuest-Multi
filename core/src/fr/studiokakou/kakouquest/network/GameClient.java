@@ -10,6 +10,7 @@ import fr.studiokakou.kakouquest.player.PlayerList;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 import fr.studiokakou.network.SharedFunctions;
 import fr.studiokakou.network.message.ConnectMessage;
+import fr.studiokakou.network.message.IdMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,15 +22,17 @@ public class GameClient implements Listener {
     String ipAdress;
     int port;
     int udp;
+    int id;
 
     Player player;
 
-    //Thread clientThread;
+    public static boolean isConnected = false;
+
+    Thread sendingThread;
 
     public GameClient(String ipAdress, int tcp_port, int udp_port, Player player){
         this.player = player;
         this.client = new Client();
-        //this.clientThread = new Thread(client);
 
         SharedFunctions.getSharedRegister(client.getKryo());
 
@@ -39,7 +42,6 @@ public class GameClient implements Listener {
     }
 
     public void startClient() {
-        //clientThread.start();
         client.start();
 
         try {
@@ -52,19 +54,48 @@ public class GameClient implements Listener {
 
     }
 
+    public void startSendingThread(){
+        this.sendingThread = new Thread(() -> {
+            while (isConnected){
+                try {
+                    client.sendTCP(OnlinePlayerConstants.mainToOnlinePlayer(player));
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        sendingThread.start();
+    }
+
 
     public void connected(Connection connection) {
+        isConnected = true;
         client.sendTCP(new ConnectMessage(OnlinePlayerConstants.mainToOnlinePlayer(player)));
+        startSendingThread();
+    }
+
+    public void disconnected(Connection connection) {
+        isConnected = false;
+        System.out.println("You got disconnected from the game");
+        System.exit(0);
     }
 
     public void received(Connection connection, Object object) {
-        System.out.println("received");
+        if (object instanceof IdMessage){
+            IdMessage message = (IdMessage) object;
+            this.id = message.id;
+        }
+
         if (object instanceof PlayerList) {
             PlayerList playerList = (PlayerList) object;
 
-            for (OnlinePlayer onlinePlayer : playerList.onlinePlayersArrayList){
-                System.out.println(onlinePlayer.username);
-            }
+            playerList.removePlayer(OnlineGameScreen.username);
 
             OnlineGameScreen.onlinePlayers = playerList.onlinePlayersArrayList;
         }
