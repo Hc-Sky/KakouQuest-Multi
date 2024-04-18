@@ -10,6 +10,8 @@ import fr.studiokakou.kakouquest.network.GameClient;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
+import fr.studiokakou.kakouquest.weapon.OnlineMeleeWeapon;
+import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 
 import java.time.LocalDateTime;
 
@@ -37,6 +39,9 @@ public class OnlinePlayer {
     LocalDateTime dashTimer;
     float dashStateTime;
 
+    //player weapon
+    public OnlineMeleeWeapon currentWeapon;
+
     //player texture infos
     public int texture_height;
     public int texture_width;
@@ -57,6 +62,8 @@ public class OnlinePlayer {
 
         this.pos = player.pos;
         this.lastPos = player.lastPos;
+
+        this.currentWeapon = StaticsMeleeWeapon.meleeWeaponToOnline(player.currentWeapon);
 
         this.hp=player.hp;
         this.max_hp= player.max_hp;
@@ -81,6 +88,10 @@ public class OnlinePlayer {
         this.hasPlayerSpawn=player.hasPlayerSpawn;
 
         this.bloodStateTime = player.bloodStateTime;
+    }
+
+    public void addMeleeWeapon(OnlineMeleeWeapon meleeWeapon){
+        this.currentWeapon = meleeWeapon;
     }
 
     public Point center(){

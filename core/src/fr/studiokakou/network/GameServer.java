@@ -5,12 +5,15 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import fr.studiokakou.kakouquest.player.OnlinePlayer;
 import fr.studiokakou.kakouquest.player.PlayerList;
+import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
+import fr.studiokakou.network.message.ChangePlayerStatsMessage;
 import fr.studiokakou.network.message.ConnectMessage;
 import fr.studiokakou.network.message.IdMessage;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameServer implements Listener {
     Server server;
@@ -54,6 +57,11 @@ public class GameServer implements Listener {
             }
             onlinePlayers.put(id, onlinePlayer);
 
+//            if (onlinePlayer.currentWeapon == null){
+//                onlinePlayer.addMeleeWeapon(StaticsMeleeWeapon.RUSTY_SWORD());
+//            }
+            //changePlayerStats(onlinePlayer);
+
             System.out.println("New player ["+onlinePlayer.username+"] connected with id : "+connection.getID());
 
             server.sendToTCP(connection.getID(), new IdMessage(connection.getID()));
@@ -76,10 +84,26 @@ public class GameServer implements Listener {
 
         playerList.onlinePlayersArrayList.addAll(onlinePlayers.values());
 
-
-
         onlinePlayers.forEach((integer, onlinePlayer) -> {
             server.sendToTCP(integer, playerList);
         });
+    }
+
+    public void changePlayerStats(OnlinePlayer player){
+        System.out.println("Sending stat changes");
+        server.sendToTCP(getIdWithUsername(player.username), new ChangePlayerStatsMessage(player));
+    }
+
+
+    static int researchInt;
+    public int getIdWithUsername(String username){
+        onlinePlayers.forEach((integer, onlinePlayer) -> {
+            if(Objects.equals(onlinePlayer.username, username)){
+                researchInt = integer.intValue();
+            }
+        });
+
+        System.out.println("found id : "+researchInt);
+        return researchInt;
     }
 }

@@ -133,9 +133,6 @@ public class Player {
         this.speed=40f;
         this.max_stamina = 100;
         this.stamina = 100;
-
-        //default weapon
-        this.currentWeapon = MeleeWeapon.ANIME_SWORD();
     }
 
     /**
@@ -238,6 +235,9 @@ public class Player {
      * Permet de faire attaquer le joueur.
      */
     public void attack() {
+        if (currentWeapon==null){
+            return;
+        }
         if (canAttack && !this.isAttacking && this.canActionWithStamina(Constants.ATTACK_STAMINA_USAGE)){
             this.isAttacking=true;
             this.canAttack = false;
@@ -259,6 +259,9 @@ public class Player {
      * @param batch the batch
      */
     public void showAttack(SpriteBatch batch){
+        if (this.currentWeapon == null){
+            return;
+        }
         if (this.attackRotation <= this.attackEndRotation){
             this.attackPos = Point.getPosWithAngle(this.center(), Player.PLAYER_MELEE_WEAPON_DISTANCE, this.attackRotation);
 
@@ -376,6 +379,20 @@ public class Player {
     public void takeDamage(int damage){
         this.hp -= damage;
         this.bloodStateTime=0f;
+    }
+
+    public void changePlayerStats(OnlinePlayer onlinePlayer){
+        // Update the player's stats based on the OnlinePlayer object
+        this.hp = onlinePlayer.hp;
+        this.max_hp = onlinePlayer.max_hp;
+        this.strength = onlinePlayer.strength;
+        this.speed = onlinePlayer.speed;
+        this.stamina = onlinePlayer.stamina;
+        this.max_stamina = onlinePlayer.max_stamina;
+
+        if (onlinePlayer.currentWeapon != null){
+            this.currentWeapon = new MeleeWeapon(onlinePlayer.currentWeapon);
+        }
     }
 
 }

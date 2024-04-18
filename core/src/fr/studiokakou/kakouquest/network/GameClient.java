@@ -9,6 +9,7 @@ import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.player.PlayerList;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 import fr.studiokakou.network.SharedFunctions;
+import fr.studiokakou.network.message.ChangePlayerStatsMessage;
 import fr.studiokakou.network.message.ConnectMessage;
 import fr.studiokakou.network.message.IdMessage;
 
@@ -90,6 +91,14 @@ public class GameClient implements Listener {
         if (object instanceof IdMessage){
             IdMessage message = (IdMessage) object;
             this.id = message.id;
+        }
+
+        if (object instanceof ChangePlayerStatsMessage){
+            System.out.println("Received a stat request");
+
+            ChangePlayerStatsMessage changePlayerStatsMessage = (ChangePlayerStatsMessage) object;
+
+            player.changePlayerStats(changePlayerStatsMessage.onlinePlayer);
         }
 
         if (object instanceof PlayerList) {
