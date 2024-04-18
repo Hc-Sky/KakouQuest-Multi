@@ -14,6 +14,7 @@ import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
+import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 
 import java.time.LocalDateTime;
 
@@ -125,6 +126,8 @@ public class Player {
         //spawn player pos
         this.pos = new Point(spawn.x-((float) this.texture_width /2), spawn.y);
         this.lastPos = this.pos;
+
+        this.currentWeapon = new MeleeWeapon(StaticsMeleeWeapon.ANIME_SWORD());
 
         //default values
         this.max_hp=100;

@@ -69,7 +69,7 @@ public class MeleeWeapon {
 
     public MeleeWeapon(OnlineMeleeWeapon onlineMeleeWeapon) {
         if (onlineMeleeWeapon==null){
-            return;
+            return ;
         }
 
         //weapon stats
