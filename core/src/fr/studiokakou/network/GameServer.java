@@ -66,7 +66,7 @@ public class GameServer implements Listener {
 //            if (onlinePlayer.currentWeapon == null){
 //                onlinePlayer.addMeleeWeapon(StaticsMeleeWeapon.RUSTY_SWORD());
 //            }
-            //changePlayerStats(onlinePlayer);
+            changePlayerStats(onlinePlayer);
 
             System.out.println("New player ["+onlinePlayer.username+"] connected with id : "+connection.getID());
 

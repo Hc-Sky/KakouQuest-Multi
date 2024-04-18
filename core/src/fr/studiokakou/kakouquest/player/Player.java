@@ -394,7 +394,8 @@ public class Player {
         this.max_stamina = onlinePlayer.max_stamina;
 
         if (onlinePlayer.currentWeapon != null){
-            this.currentWeapon = new MeleeWeapon(onlinePlayer.currentWeapon);
+            this.currentWeapon = StaticsMeleeWeapon.onlinetToMeleeWeapon(onlinePlayer.currentWeapon);
+            System.out.println(this.currentWeapon.name);
         }
     }
 

@@ -22,6 +22,22 @@ public class StaticsMeleeWeapon {
         );
     }
 
+    public static MeleeWeapon onlinetToMeleeWeapon(OnlineMeleeWeapon meleeWeapon){
+        if (meleeWeapon == null){
+            return null;
+        }
+
+        return new MeleeWeapon(
+            meleeWeapon.name,
+            meleeWeapon.texturePath,
+            meleeWeapon.damage,
+            meleeWeapon.resistance,
+            meleeWeapon.attackRange,
+            meleeWeapon.attackSpeed,
+            meleeWeapon.size
+        );
+    }
+
     public static Dictionary<Integer, ArrayList<OnlineMeleeWeapon>> possibleMeleeWeapon = new Hashtable<>();
 
     public static void createPossibleMeleeWeapons(){

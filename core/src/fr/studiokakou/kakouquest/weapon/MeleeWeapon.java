@@ -57,6 +57,7 @@ public class MeleeWeapon {
 
         //weapon texture
         this.texturePath = texturePath;
+        System.out.println(texturePath);
         this.texture = new Texture(texturePath);
         this.sprite = new Sprite(this.texture);
         this.sprite.setScale(this.size);
