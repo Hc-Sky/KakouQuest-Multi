@@ -108,6 +108,19 @@ public class GameClient implements Listener {
 
             OnlineGameScreen.onlinePlayers = playerList.onlinePlayersArrayList;
         }
+
+        if (object instanceof String){
+            String command = (String) object;
+
+            System.out.println("Received a command");
+
+            if (command.equals("kick")) {
+                System.out.println("you got kicked");
+                client.stop();
+                client.close();
+                System.exit(0);
+            }
+        }
     }
 
     public void sendPlayer(Player player){

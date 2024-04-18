@@ -16,23 +16,27 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameServer implements Listener {
-    Server server;
+    public Server server;
 
     public int PORT;
     public int udp;
     public int maxPlayer;
     public String serverName;
 
+    Thread commandThread;
+
     //tableau des joueurs (id, onlinePlayer)
     public static Map<Integer, OnlinePlayer> onlinePlayers = new HashMap<>();
 
     public GameServer(){
-        this.server = new Server();
+        server = new Server();
 
         this.PORT = GetConfig.getIntProperty("PORT");
         this.udp = GetConfig.getIntProperty("UDP_PORT");
         this.maxPlayer = GetConfig.getIntProperty("MAX_PLAYER");
         this.serverName = GetConfig.getStringProperty("SERVER_NAME");
+
+        this.commandThread = new Thread(new CommandsManager(this));
 
         onlinePlayers.clear();
     }
@@ -45,6 +49,8 @@ public class GameServer implements Listener {
         server.addListener(this);
         System.out.println("Server started on port : " + PORT);
         System.out.println("Server IP Adress : " + InetAddress.getLocalHost().getHostAddress());
+
+        commandThread.start();
     }
 
     public void received(Connection connection, Object object) {
