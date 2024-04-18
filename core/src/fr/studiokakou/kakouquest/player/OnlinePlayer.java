@@ -2,9 +2,11 @@ package fr.studiokakou.kakouquest.player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.esotericsoftware.kryonet.Connection;
+import fr.studiokakou.kakouquest.constants.Constants;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.network.GameClient;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
@@ -142,6 +144,11 @@ public class OnlinePlayer {
             this.bloodStateTime = -1;
         }
 
+        //draw username
+        Constants.usernameFont.getData().setScale(0.3f);
+        final GlyphLayout layout = new GlyphLayout(Constants.usernameFont, this.username);
+
+        Constants.usernameFont.draw(batch, layout, this.center().x-layout.width/2, this.pos.y+this.texture_height);
     }
 
 }
