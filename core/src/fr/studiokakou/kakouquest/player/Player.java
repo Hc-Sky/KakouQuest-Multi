@@ -127,8 +127,6 @@ public class Player {
         this.pos = new Point(spawn.x-((float) this.texture_width /2), spawn.y);
         this.lastPos = this.pos;
 
-        this.currentWeapon = new MeleeWeapon(StaticsMeleeWeapon.ANIME_SWORD());
-
         //default values
         this.max_hp=100;
         this.hp=100;
@@ -136,6 +134,7 @@ public class Player {
         this.speed=40f;
         this.max_stamina = 100;
         this.stamina = 100;
+        this.currentWeapon = StaticsMeleeWeapon.onlineToMeleeWeapon(StaticsMeleeWeapon.RUSTY_SWORD());
     }
 
     /**
@@ -385,6 +384,8 @@ public class Player {
     }
 
     public void changePlayerStats(OnlinePlayer onlinePlayer){
+        System.out.println("changing stats");
+
         // Update the player's stats based on the OnlinePlayer object
         this.hp = onlinePlayer.hp;
         this.max_hp = onlinePlayer.max_hp;
@@ -394,8 +395,8 @@ public class Player {
         this.max_stamina = onlinePlayer.max_stamina;
 
         if (onlinePlayer.currentWeapon != null){
-            this.currentWeapon = StaticsMeleeWeapon.onlinetToMeleeWeapon(onlinePlayer.currentWeapon);
-            System.out.println(this.currentWeapon.name);
+            System.out.println("changing weapon");
+            this.currentWeapon = StaticsMeleeWeapon.onlineToMeleeWeapon(onlinePlayer.currentWeapon);
         }
     }
 

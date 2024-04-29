@@ -1,5 +1,7 @@
 package fr.studiokakou.kakouquest.weapon;
 
+import com.badlogic.gdx.graphics.Texture;
+
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -22,19 +24,19 @@ public class StaticsMeleeWeapon {
         );
     }
 
-    public static MeleeWeapon onlinetToMeleeWeapon(OnlineMeleeWeapon meleeWeapon){
-        if (meleeWeapon == null){
-            return null;
+    public static MeleeWeapon onlineToMeleeWeapon(OnlineMeleeWeapon meleeWeapon){
+        if (meleeWeapon==null){
+            return null ;
         }
 
         return new MeleeWeapon(
-            meleeWeapon.name,
-            meleeWeapon.texturePath,
-            meleeWeapon.damage,
-            meleeWeapon.resistance,
-            meleeWeapon.attackRange,
-            meleeWeapon.attackSpeed,
-            meleeWeapon.size
+                meleeWeapon.name,
+                meleeWeapon.texturePath,
+                meleeWeapon.damage,
+                meleeWeapon.resistance,
+                meleeWeapon.attackRange,
+                meleeWeapon.attackSpeed,
+                meleeWeapon.size
         );
     }
 
@@ -95,6 +97,29 @@ public class StaticsMeleeWeapon {
     public static OnlineMeleeWeapon THROWING_AXE () {return new OnlineMeleeWeapon("Throwing axe", "assets/weapon/weapon_throwing_axe.png", 15, 50, 90, 0.7f, 1);}
     public static OnlineMeleeWeapon WARAXE () {return new OnlineMeleeWeapon("Waraxe", "assets/weapon/weapon_waraxe.png", 45, 60, 120, 0.4f, 1.3f);}
 
-    //dev weapon
-    public static OnlineMeleeWeapon DEV_SWORD () {return new OnlineMeleeWeapon("Dev sword", "assets/weapon/weapon_golden_sword.png", 200, -1, 120, 0.7f, 1);}
+    public static Dictionary<String, Texture> textureDictionary = new Hashtable<>();
+
+    public static void createTextureDictionary() {
+        textureDictionary = new Hashtable<>();
+        textureDictionary.put("assets/weapon/weapon_anime_sword.png", new Texture("assets/weapon/weapon_anime_sword.png"));
+        textureDictionary.put("assets/weapon/weapon_baton_with_spikes.png", new Texture("assets/weapon/weapon_baton_with_spikes.png"));
+        textureDictionary.put("assets/weapon/weapon_big_hammer.png", new Texture("assets/weapon/weapon_big_hammer.png"));
+        textureDictionary.put("assets/weapon/weapon_cleaver.png", new Texture("assets/weapon/weapon_cleaver.png"));
+        textureDictionary.put("assets/weapon/weapon_double_axe.png", new Texture("assets/weapon/weapon_double_axe.png"));
+        textureDictionary.put("assets/weapon/weapon_duel_sword.png", new Texture("assets/weapon/weapon_duel_sword.png"));
+        textureDictionary.put("assets/weapon/weapon_golden_sword.png", new Texture("assets/weapon/weapon_golden_sword.png"));
+        textureDictionary.put("assets/weapon/weapon_hammer.png", new Texture("assets/weapon/weapon_hammer.png"));
+        textureDictionary.put("assets/weapon/weapon_katana.png", new Texture("assets/weapon/weapon_katana.png"));
+        textureDictionary.put("assets/weapon/weapon_knife.png", new Texture("assets/weapon/weapon_knife.png"));
+        textureDictionary.put("assets/weapon/weapon_knight_sword.png", new Texture("assets/weapon/weapon_knight_sword.png"));
+        textureDictionary.put("assets/weapon/weapon_lavish_sword.png", new Texture("assets/weapon/weapon_lavish_sword.png"));
+        textureDictionary.put("assets/weapon/weapon_mace.png", new Texture("assets/weapon/weapon_mace.png"));
+        textureDictionary.put("assets/weapon/weapon_machete.png", new Texture("assets/weapon/weapon_machete.png"));
+        textureDictionary.put("assets/weapon/weapon_red_gem_sword.png", new Texture("assets/weapon/weapon_red_gem_sword.png"));
+        textureDictionary.put("assets/weapon/weapon_regular_sword.png", new Texture("assets/weapon/weapon_regular_sword.png"));
+        textureDictionary.put("assets/weapon/weapon_rusty_sword.png", new Texture("assets/weapon/weapon_rusty_sword.png"));
+        textureDictionary.put("assets/weapon/weapon_saw_sword.png", new Texture("assets/weapon/weapon_saw_sword.png"));
+        textureDictionary.put("assets/weapon/weapon_throwing_axe.png", new Texture("assets/weapon/weapon_throwing_axe.png"));
+        textureDictionary.put("assets/weapon/weapon_waraxe.png", new Texture("assets/weapon/weapon_waraxe.png"));
+    }
 }

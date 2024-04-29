@@ -14,6 +14,7 @@ import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.OnlinePlayer;
 import fr.studiokakou.kakouquest.player.OnlinePlayerConstants;
 import fr.studiokakou.kakouquest.player.Player;
+import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -49,7 +50,7 @@ public class OnlineGameScreen implements Screen {
 
     public OnlineGameScreen(GameSpace game){
         Scanner myObj = new Scanner(System.in);  // Create a Scanner object
-        System.out.println("Enter username");
+        System.out.print("Enter username : ");
 
         username = myObj.nextLine();
 
@@ -58,6 +59,7 @@ public class OnlineGameScreen implements Screen {
         this.game=game;
         this.batch = game.batch;
         this.hudBatch = game.hudBatch;
+        StaticsMeleeWeapon.createTextureDictionary();
 
         this.map = new Map(1, 1);
 

@@ -1,17 +1,11 @@
 package fr.studiokakou.kakouquest.player;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.esotericsoftware.kryonet.Connection;
+import com.badlogic.gdx.graphics.g2d.*;
 import fr.studiokakou.kakouquest.constants.Constants;
 import fr.studiokakou.kakouquest.map.Point;
-import fr.studiokakou.kakouquest.network.GameClient;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
-import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 import fr.studiokakou.kakouquest.weapon.OnlineMeleeWeapon;
 import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 
@@ -31,6 +25,16 @@ public class OnlinePlayer {
     public float speed; // The speed of the player
     public float stamina; // The stamina of the player
     public int max_stamina; // The maximum stamina of the player
+
+    //attach infos
+    LocalDateTime staminaTimer;
+    LocalDateTime attackTimer;
+    public boolean isAttacking=false;
+    public boolean canAttack = true;
+    Point attackDirection;
+    Point attackPos;
+    float attackEndRotation;
+    float attackRotation;
 
     //dash infos
     boolean isDashing = false;
@@ -73,6 +77,15 @@ public class OnlinePlayer {
         this.stamina=player.stamina;
         this.max_stamina=player.max_stamina;
 
+        this.staminaTimer=player.staminaTimer;
+        this.attackTimer=player.attackTimer;
+        this.isAttacking=player.isAttacking;
+        this.canAttack=player.canAttack;
+        this.attackDirection=player.attackDirection;
+        this.attackPos=player.attackPos;
+        this.attackEndRotation=player.attackEndRotation;
+        this.attackRotation=player.attackRotation;
+
         this.isDashing=player.isDashing;
         this.canDash=player.canDash;
         this.dashFinalPoint=player.dashFinalPoint;
@@ -90,6 +103,7 @@ public class OnlinePlayer {
         this.hasPlayerSpawn=player.hasPlayerSpawn;
 
         this.bloodStateTime = player.bloodStateTime;
+
     }
 
     public void addMeleeWeapon(OnlineMeleeWeapon meleeWeapon){
@@ -104,8 +118,27 @@ public class OnlinePlayer {
         return new Point(this.pos.x+((float) this.texture_width /2), this.pos.y+((float) this.texture_height /2));
     }
 
-    public void draw(SpriteBatch batch) {
+    public void showAttack(SpriteBatch batch){
+        if (this.currentWeapon == null){
+            return;
+        }
 
+        Sprite weaponSprite = new Sprite(StaticsMeleeWeapon.textureDictionary.get(this.currentWeapon.texturePath));
+
+        weaponSprite.setScale(this.currentWeapon.size);
+        weaponSprite.setOrigin(weaponSprite.getWidth()/2, 0);
+        weaponSprite.flip(true, false);
+
+        this.attackPos = Point.getPosWithAngle(this.center(), Player.PLAYER_MELEE_WEAPON_DISTANCE, this.attackRotation);
+
+        weaponSprite.setPosition(this.attackPos.x-weaponSprite.getWidth()/2, this.attackPos.y);
+        weaponSprite.setRotation(this.attackRotation-90f);
+
+        weaponSprite.draw(batch);
+    }
+
+
+    public void draw(SpriteBatch batch) {
         TextureRegion currentFrame;
         if (this.isRunning) {
             if (!flip && this.lastPos.x > this.pos.x) {
@@ -142,6 +175,10 @@ public class OnlinePlayer {
 
         if (OnlinePlayerConstants.bloodEffect.isAnimationFinished(bloodStateTime)) {
             this.bloodStateTime = -1;
+        }
+
+        if (this.isAttacking) {
+            this.showAttack(batch);
         }
 
         //draw username

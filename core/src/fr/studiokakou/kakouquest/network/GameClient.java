@@ -94,10 +94,9 @@ public class GameClient implements Listener {
         }
 
         if (object instanceof ChangePlayerStatsMessage){
-            System.out.println("Received a stat request");
-
             ChangePlayerStatsMessage changePlayerStatsMessage = (ChangePlayerStatsMessage) object;
 
+            System.out.println("received a stats change");
             player.changePlayerStats(changePlayerStatsMessage.onlinePlayer);
         }
 

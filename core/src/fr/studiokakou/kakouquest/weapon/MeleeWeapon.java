@@ -3,10 +3,6 @@ package fr.studiokakou.kakouquest.weapon;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
-
 
 /**
  * This class represents a MeleeWeapon in the game.
@@ -44,7 +40,6 @@ public class MeleeWeapon {
      * @param attackSpeed The attack speed of the weapon.
      * @param size The size of the weapon.
      */
-
     public MeleeWeapon(String name, String texturePath, int damage, int resistance, float attackRange, float attackSpeed, float size) {
         //weapon stats
         this.name = name;
@@ -57,8 +52,7 @@ public class MeleeWeapon {
 
         //weapon texture
         this.texturePath = texturePath;
-        System.out.println(texturePath);
-        this.texture = new Texture(texturePath);
+        this.texture = StaticsMeleeWeapon.textureDictionary.get(texturePath);
         this.sprite = new Sprite(this.texture);
         this.sprite.setScale(this.size);
         this.height = this.sprite.getHeight();
@@ -67,12 +61,7 @@ public class MeleeWeapon {
         this.sprite.flip(true, false);
     }
 
-
     public MeleeWeapon(OnlineMeleeWeapon onlineMeleeWeapon) {
-        if (onlineMeleeWeapon==null){
-            return ;
-        }
-
         //weapon stats
         this.name = onlineMeleeWeapon.name;
         this.damage = onlineMeleeWeapon.damage;
@@ -84,7 +73,7 @@ public class MeleeWeapon {
 
         //weapon texture
         this.texturePath = onlineMeleeWeapon.texturePath;
-        this.texture = new Texture(texturePath);
+        this.texture = StaticsMeleeWeapon.textureDictionary.get(texturePath);
         this.sprite = new Sprite(this.texture);
         this.sprite.setScale(this.size);
         this.height = this.sprite.getHeight();

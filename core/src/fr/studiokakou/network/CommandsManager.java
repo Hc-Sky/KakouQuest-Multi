@@ -65,11 +65,15 @@ public class CommandsManager implements Runnable {
                     gameServer.changePlayerStats(GameServer.onlinePlayers.get(id));
                 }
             }
-
-            if (splitCommand[1].equals("weapon")){
-                if (splitCommand[2].equals("anime")){
+            else if (splitCommand[1].equals("weapon")){
+                if (splitCommand[2].equals("rusty")){
                     int id = gameServer.getIdWithUsername(splitCommand[3]);
                     GameServer.onlinePlayers.get(id).currentWeapon = StaticsMeleeWeapon.RUSTY_SWORD();
+                    gameServer.changePlayerStats(GameServer.onlinePlayers.get(id));
+                }
+                else if (splitCommand[2].equals("anime")){
+                    int id = gameServer.getIdWithUsername(splitCommand[3]);
+                    GameServer.onlinePlayers.get(id).currentWeapon = StaticsMeleeWeapon.ANIME_SWORD();
                     gameServer.changePlayerStats(GameServer.onlinePlayers.get(id));
                 }
             }
