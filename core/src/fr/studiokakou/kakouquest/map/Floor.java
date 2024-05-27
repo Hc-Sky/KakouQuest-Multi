@@ -15,7 +15,7 @@ public class Floor {
      */
     Point pos;
 
-    public String texturePath;
+    public int textureIndex;
 
     /**
      * la largeur de la texture.
@@ -26,19 +26,6 @@ public class Floor {
      * la hauteur de la texture.
      */
     public static float TEXTURE_HEIGHT = 16;
-    /**
-     * la liste des textures possibles.
-     */
-//    public static Texture[] POSSIBLE_TEXTURE = {
-//            new Texture(Gdx.files.internal("assets/map/floor_1.png")),
-//            new Texture(Gdx.files.internal("assets/map/floor_2.png")),
-//            new Texture(Gdx.files.internal("assets/map/floor_3.png")),
-//            new Texture(Gdx.files.internal("assets/map/floor_4.png")),
-//            new Texture(Gdx.files.internal("assets/map/floor_5.png")),
-//            new Texture(Gdx.files.internal("assets/map/floor_6.png")),
-//            new Texture(Gdx.files.internal("assets/map/floor_7.png")),
-//            new Texture(Gdx.files.internal("assets/map/floor_8.png")),
-//    };
 
     /**
      * La texture.
@@ -56,17 +43,17 @@ public class Floor {
     public Floor(float x, float y){
         this.pos = new Point(x, y);
 
-//        if (Utils.randint(0,4) == 0){
-//            this.texture = Floor.POSSIBLE_TEXTURE[Utils.randint(1,Floor.POSSIBLE_TEXTURE.length-1)];
-//        }else {
-//            this.texture = Floor.POSSIBLE_TEXTURE[0];
-//        }
+        if (Utils.randint(0,4) == 0){
+            this.textureIndex = Utils.randint(1,7);
+        }else {
+            this.textureIndex = 0;
+        }
 
     }
 
     public Floor(OnlineFloor onlineFloor){
         this.pos = new Point(onlineFloor.pos.x, onlineFloor.pos.y);
-        this.texturePath = onlineFloor.texturePath;
+        this.textureIndex = onlineFloor.textureIndex;
     }
 
     public ArrayList<Wall> getSurrounding(ArrayList<Floor> floors){

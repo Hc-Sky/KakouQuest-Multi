@@ -60,6 +60,9 @@ public class Map {
     public Hashtable<Float, Object> distances = new Hashtable<>();
 
 
+    public static Texture[] FLOOR_TEXTURES;
+
+
     /**
      * Constructs a Map object.
      * This constructor is used to create a Map object.
@@ -70,6 +73,8 @@ public class Map {
     public Map(int width, int height){
         this.map_height = height;
         this.map_width = width;
+
+        FLOOR_TEXTURES = new Texture[]{new Texture("assets/map/floor_1.png"), new Texture("assets/map/floor_2.png"), new Texture("assets/map/floor_3.png"), new Texture("assets/map/floor_4.png"), new Texture("assets/map/floor_5.png"), new Texture("assets/map/floor_6.png"), new Texture("assets/map/floor_7.png"), new Texture("assets/map/floor_8.png")};
     }
 
     public Map(ServerMap onlineMap){
@@ -99,10 +104,8 @@ public class Map {
      * @param batch the sprite batch
      */
     public void drawMap(SpriteBatch batch){
-        Texture tmp = new Texture("assets/map/floor_1.png");
-
         for (Floor f : this.floors){
-            batch.draw(tmp, f.pos.x, f.pos.y);
+            batch.draw(FLOOR_TEXTURES[f.textureIndex], f.pos.x, f.pos.y);
         }
 
         for (Wall w : this.walls){

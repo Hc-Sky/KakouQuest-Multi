@@ -7,25 +7,25 @@ import java.util.ArrayList;
 
 public class OnlineFloor {
     public Point pos;
-    public String texturePath;
-
-    public static String[] POSSIBLE_TEXTURE =  { "assets/map/floor_1.png", "assets/map/floor_2.png", "assets/map/floor_3.png", "assets/map/floor_4.png", "assets/map/floor_5.png", "assets/map/floor_6.png", "assets/map/floor_7.png", "assets/map/floor_8.png", };
+    public int textureIndex;
 
     public OnlineFloor(Point pos){
         this.pos = pos;
+
         if (Utils.randint(0,4) == 0){
-            this.texturePath = OnlineFloor.POSSIBLE_TEXTURE[Utils.randint(1,OnlineFloor.POSSIBLE_TEXTURE.length-1)];
+            this.textureIndex = Utils.randint(1,7);
         }else {
-            this.texturePath = OnlineFloor.POSSIBLE_TEXTURE[0];
+            this.textureIndex = 0;
         }
     }
 
     public OnlineFloor(float x, float y){
         this.pos = new Point(x, y);
+
         if (Utils.randint(0,4) == 0){
-            this.texturePath = OnlineFloor.POSSIBLE_TEXTURE[Utils.randint(1,OnlineFloor.POSSIBLE_TEXTURE.length-1)];
+            this.textureIndex = Utils.randint(1,7);
         }else {
-            this.texturePath = OnlineFloor.POSSIBLE_TEXTURE[0];
+            this.textureIndex = 0;
         }
     }
 
