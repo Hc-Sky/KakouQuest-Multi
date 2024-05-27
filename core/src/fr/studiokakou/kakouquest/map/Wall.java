@@ -10,9 +10,6 @@ public class Wall {
     /** The position of the wall on the map. */
     Point pos;
 
-    /** The texture used to render the wall. */
-    Texture texture;
-
     public String assetPath;
 
     /**
@@ -24,21 +21,10 @@ public class Wall {
     public Wall(Point pos, String assetPath){
         this.pos = pos;
         this.assetPath=assetPath;
-        this.texture = new Texture(assetPath);
     }
 
     public Wall(OnlineWall wall){
         this.pos = wall.pos;
         this.assetPath = wall.assetPath;
-        this.texture = new Texture(wall.assetPath);
-    }
-
-    /**
-     * Draws the wall on the screen.
-     *
-     * @param batch   The sprite batch used for rendering.
-     */
-    public void draw(SpriteBatch batch){
-        batch.draw(this.texture, this.pos.x*Floor.TEXTURE_WIDTH, this.pos.y*Floor.TEXTURE_HEIGHT);
     }
 }

@@ -7,6 +7,7 @@ import fr.studiokakou.network.ServerMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 /**
@@ -61,6 +62,7 @@ public class Map {
 
 
     public static Texture[] FLOOR_TEXTURES;
+    public static HashMap<String, Texture> WALL_TEXTURES;
 
 
     /**
@@ -75,6 +77,19 @@ public class Map {
         this.map_width = width;
 
         FLOOR_TEXTURES = new Texture[]{new Texture("assets/map/floor_1.png"), new Texture("assets/map/floor_2.png"), new Texture("assets/map/floor_3.png"), new Texture("assets/map/floor_4.png"), new Texture("assets/map/floor_5.png"), new Texture("assets/map/floor_6.png"), new Texture("assets/map/floor_7.png"), new Texture("assets/map/floor_8.png")};
+        WALL_TEXTURES = new HashMap<>();
+        WALL_TEXTURES.put("assets/map/wall_outer_front_left.png", new Texture("assets/map/wall_outer_front_left.png"));
+        WALL_TEXTURES.put("assets/map/wall_mid.png", new Texture("assets/map/wall_mid.png"));
+        WALL_TEXTURES.put("assets/map/wall_top_mid.png", new Texture("assets/map/wall_top_mid.png"));
+        WALL_TEXTURES.put("assets/map/wall_edge_mid_right.png", new Texture("assets/map/wall_edge_mid_right.png"));
+        WALL_TEXTURES.put("assets/map/wall_outer_front_right.png", new Texture("assets/map/wall_outer_front_right.png"));
+        WALL_TEXTURES.put("assets/map/wall_edge_mid_left.png", new Texture("assets/map/wall_edge_mid_left.png"));
+        WALL_TEXTURES.put("assets/map/wall_outer_top_left.png", new Texture("assets/map/wall_outer_top_left.png"));
+        WALL_TEXTURES.put("assets/map/wall_outer_top_right.png", new Texture("assets/map/wall_outer_top_right.png"));
+        WALL_TEXTURES.put("assets/map/wall_outer_mid_right.png", new Texture("assets/map/wall_outer_mid_right.png"));
+        WALL_TEXTURES.put("assets/map/wall_outer_mid_left.png", new Texture("assets/map/wall_outer_mid_left.png"));
+
+
     }
 
     public Map(ServerMap onlineMap){
@@ -87,15 +102,14 @@ public class Map {
         this.rooms = onlineMap.rooms;
         this.bridges = onlineMap.bridges;
 
-        System.out.println("floors size: " + onlineMap.floors.size());
 
         for (int i = 0; i < onlineMap.floors.size(); i++) {
             this.floors.add(new Floor(onlineMap.floors.get(i)));
         }
 
-//        for (int i = 0; i < onlineMap.walls.size(); i++) {
-//            this.walls.add(new Wall(onlineMap.walls.get(i)));
-//        }
+        for (int i = 0; i < onlineMap.walls.size(); i++) {
+            this.walls.add(new Wall(onlineMap.walls.get(i)));
+        }
     }
 
     /**
@@ -109,7 +123,7 @@ public class Map {
         }
 
         for (Wall w : this.walls){
-            w.draw(batch);
+            batch.draw(WALL_TEXTURES.get(w.assetPath), w.pos.x*16, w.pos.y*16);
         }
     }
 
