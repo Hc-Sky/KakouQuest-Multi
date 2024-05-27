@@ -146,8 +146,11 @@ public class Player {
     }
 
     public void move(float x, float y, Map map){
-        if (canMove(this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed), map)){
+        boolean willMove = canMove(this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed), map);
+        System.out.println(willMove);
+        if (willMove){
             this.lastPos = this.pos;
+            System.out.println("moving from : " + this.pos + " to : " + this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed));
             this.pos = this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed);
         }
     }
@@ -208,7 +211,14 @@ public class Player {
 
 
     public boolean canMove(Point newPos, Map map){
-        return true;
+        Point hitboxTopLeft = newPos.add(3, this.texture_height-5 - Floor.TEXTURE_HEIGHT);
+        Point hitboxBottomLeft = newPos.add(3, 0);
+        Point hitboxTopRight = newPos.add(this.texture_width-3, this.texture_height-5 - Floor.TEXTURE_HEIGHT);
+        Point hitboxBottomRight = newPos.add(this.texture_width-3, 0);
+
+        Point[] points = {hitboxTopLeft, hitboxBottomLeft, hitboxTopRight, hitboxBottomRight};
+
+        return map.arePointsOnFloor(points);
     }
 
     public boolean canActionWithStamina(int amount){
@@ -384,7 +394,9 @@ public class Player {
     }
 
     public void changePlayerStats(OnlinePlayer onlinePlayer){
-        System.out.println("changing stats");
+
+        this.hasPlayerSpawn = onlinePlayer.hasPlayerSpawn;
+        this.pos = onlinePlayer.pos;
 
         // Update the player's stats based on the OnlinePlayer object
         this.hp = onlinePlayer.hp;

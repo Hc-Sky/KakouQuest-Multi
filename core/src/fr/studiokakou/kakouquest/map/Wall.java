@@ -13,6 +13,8 @@ public class Wall {
     /** The texture used to render the wall. */
     Texture texture;
 
+    public String assetPath;
+
     /**
      * Constructs a new wall object.
      *
@@ -21,7 +23,14 @@ public class Wall {
      */
     public Wall(Point pos, String assetPath){
         this.pos = pos;
+        this.assetPath=assetPath;
         this.texture = new Texture(assetPath);
+    }
+
+    public Wall(OnlineWall wall){
+        this.pos = wall.pos;
+        this.assetPath = wall.assetPath;
+        this.texture = new Texture(wall.assetPath);
     }
 
     /**

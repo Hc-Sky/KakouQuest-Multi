@@ -14,6 +14,7 @@ import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.OnlinePlayer;
 import fr.studiokakou.kakouquest.player.OnlinePlayerConstants;
 import fr.studiokakou.kakouquest.player.Player;
+import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 
 import java.util.ArrayList;
@@ -28,14 +29,14 @@ public class OnlineGameScreen implements Screen {
     public int udp = 8216;
 
     //main player info
-    public static String username = "default";
+    public static String username = "guest";
     public Camera cam;
 
     //écran original utilisé pour dessiner
     GameSpace game;
 
     //map
-    public Map map;
+    public static Map map;
 
     //batch permettant de dessiner sur l'écran
     SpriteBatch batch;
@@ -49,10 +50,11 @@ public class OnlineGameScreen implements Screen {
     public static float stateTime=0f;
 
     public OnlineGameScreen(GameSpace game){
-        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
-        System.out.print("Enter username : ");
-
-        username = myObj.nextLine();
+//        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+//        System.out.print("Enter username : ");
+//
+//        username = myObj.nextLine();
+        username = Utils.randint(1000, 9999)+"";
 
         OnlinePlayerConstants.animationInit();
 
@@ -61,7 +63,7 @@ public class OnlineGameScreen implements Screen {
         this.hudBatch = game.hudBatch;
         StaticsMeleeWeapon.createTextureDictionary();
 
-        this.map = new Map(1, 1);
+        map = new Map(1, 1);
 
         // Initialisation du joueur
         this.player = new Player(new Point(100, 100));
@@ -72,22 +74,22 @@ public class OnlineGameScreen implements Screen {
 
         gameClient.startClient();
 
+
     }
 
     @Override
     public void show() {
-
         OnlineGameScreen.stateTime=0f;
         Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
         pm.dispose();
 
-        player.hasPlayerSpawn=true;
+
+        gameClient.client.sendTCP("getMap");
     }
 
     @Override
     public void render(float delta) {
-
         OnlineGameScreen.stateTime += delta;
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
@@ -97,9 +99,9 @@ public class OnlineGameScreen implements Screen {
         Gdx.gl.glClearColor(34/255f, 34/255f, 34/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        player.getKeyboardMove(this.map);
+        player.getKeyboardMove(map);
         player.getOrientation();
-        player.dash(this.map);
+        player.dash(map);
 
         gameClient.sendPlayer(player);
 
@@ -108,6 +110,8 @@ public class OnlineGameScreen implements Screen {
         batch.setProjectionMatrix(Camera.camera.combined);
 
         batch.begin();
+
+        map.drawMap(batch);
 
         OnlinePlayerConstants.drawOnlinePlayers(batch);
 

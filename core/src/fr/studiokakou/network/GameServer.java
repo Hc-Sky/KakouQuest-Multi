@@ -3,9 +3,9 @@ package fr.studiokakou.network;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.OnlinePlayer;
 import fr.studiokakou.kakouquest.player.PlayerList;
-import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 import fr.studiokakou.network.message.ChangePlayerStatsMessage;
 import fr.studiokakou.network.message.ConnectMessage;
 import fr.studiokakou.network.message.IdMessage;
@@ -13,7 +13,6 @@ import fr.studiokakou.network.message.IdMessage;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameServer implements Listener {
     public Server server;
@@ -23,13 +22,15 @@ public class GameServer implements Listener {
     public int maxPlayer;
     public String serverName;
 
+    public ServerMap map;
+
     Thread commandThread;
 
     //tableau des joueurs (id, onlinePlayer)
     public static Map<Integer, OnlinePlayer> onlinePlayers = new HashMap<>();
 
     public GameServer(){
-        server = new Server();
+        server = new Server((int)2e6, (int)5e5);
 
         this.PORT = GetConfig.getIntProperty("PORT");
         this.udp = GetConfig.getIntProperty("UDP_PORT");
@@ -39,6 +40,10 @@ public class GameServer implements Listener {
         this.commandThread = new Thread(new CommandsManager(this));
 
         onlinePlayers.clear();
+
+        System.out.println("Creating map...");
+        this.map = new ServerMap(80, 80);
+        System.out.println("Map created");
     }
 
     public void startServer() throws IOException {
@@ -55,6 +60,8 @@ public class GameServer implements Listener {
 
     public void received(Connection connection, Object object) {
         if (object instanceof ConnectMessage){
+            connection.setKeepAliveTCP(8000);
+            connection.setTimeout(120000);
             ConnectMessage connectMessage = (ConnectMessage) object;
             OnlinePlayer onlinePlayer = connectMessage.player;
             int id = connection.getID();
@@ -73,6 +80,18 @@ public class GameServer implements Listener {
             onlinePlayers.replace(connection.getID(), player);
 
             sendPlayersToAll();
+        }
+
+        if (object instanceof String){
+            String message = (String) object;
+
+            if (message.equals("getMap")){
+                server.sendToTCP(connection.getID(), map);
+                OnlinePlayer player = onlinePlayers.get(connection.getID());
+                player.pos = map.getPlayerSpawn();
+                onlinePlayers.get(connection.getID()).hasPlayerSpawn = true;
+                server.sendToTCP(connection.getID(), new ChangePlayerStatsMessage(player));
+            }
         }
     }
 

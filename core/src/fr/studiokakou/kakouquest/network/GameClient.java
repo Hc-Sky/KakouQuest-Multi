@@ -3,22 +3,21 @@ package fr.studiokakou.kakouquest.network;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import fr.studiokakou.kakouquest.player.OnlinePlayer;
+import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.player.OnlinePlayerConstants;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.player.PlayerList;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
+import fr.studiokakou.network.ServerMap;
 import fr.studiokakou.network.SharedFunctions;
 import fr.studiokakou.network.message.ChangePlayerStatsMessage;
 import fr.studiokakou.network.message.ConnectMessage;
 import fr.studiokakou.network.message.IdMessage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
 
 public class GameClient implements Listener {
-    Client client;
+    public Client client;
 
     String ipAdress;
     int port;
@@ -33,7 +32,7 @@ public class GameClient implements Listener {
 
     public GameClient(String ipAdress, int tcp_port, int udp_port, Player player){
         this.player = player;
-        this.client = new Client();
+        this.client = new Client((int)2e6, (int)5e5);
 
         SharedFunctions.getSharedRegister(client.getKryo());
 
@@ -106,6 +105,15 @@ public class GameClient implements Listener {
             playerList.removePlayer(OnlineGameScreen.username);
 
             OnlineGameScreen.onlinePlayers = playerList.onlinePlayersArrayList;
+        }
+
+        if (object instanceof ServerMap){
+            ServerMap onlineMap = (ServerMap) object;
+
+            System.out.println("Received a map");
+            System.out.println(onlineMap.floors.size());
+
+            OnlineGameScreen.map = new Map(onlineMap);
         }
 
         if (object instanceof String){

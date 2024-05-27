@@ -15,11 +15,11 @@ public class Room {
 	/**
 	 * le point de départ.
 	 */
-	Point start;
+	public Point start;
 	/**
 	 * le point de fin.
 	 */
-	Point end;
+	public Point end;
 
 	/**
 	 * Constructeur de Room.
@@ -41,6 +41,8 @@ public class Room {
 		this.start = new Point(startX, startY);
 		this.end = new Point(endX, endY);
 	}
+
+	public Room(){}
 
 	/**
 	 * colision avec une salle.

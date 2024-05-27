@@ -24,7 +24,7 @@ public class CommandsManager implements Runnable {
     }
 
     public void computeCommand(String command){
-        if (command.startsWith("list ")){
+        if (command.startsWith("list")){
             String[] splitCommand = command.split(" ");
             if (splitCommand[1].equals("players") || splitCommand[1].equals("player")){
                 GameServer.onlinePlayers.forEach((integer, onlinePlayer) -> {
@@ -33,20 +33,25 @@ public class CommandsManager implements Runnable {
             }
         }
 
-        if (command.startsWith("get")){
+        else if (command.startsWith("get")){
             String[] splitCommand = command.split(" ");
             if (splitCommand[1].equals("stats") || splitCommand[1].equals("stat")){
                 if (splitCommand.length==3){
                     OnlinePlayer p =GameServer.onlinePlayers.get(gameServer.getIdWithUsername(splitCommand[2]));
-                    System.out.println("hp : "+p.hp);
-                    System.out.println("max hp : "+p.max_hp);
-                    System.out.println("stamina : "+p.stamina);
-                    System.out.println("max stamina : "+p.max_stamina);
-                    System.out.println("position : "+p.pos);
-                    System.out.println("strength : "+p.strength);
-                    if (p.currentWeapon != null){
-                        System.out.println("weapon : "+p.currentWeapon.name);
+                    try {
+                        System.out.println("hp : "+p.hp);
+                        System.out.println("max hp : "+p.max_hp);
+                        System.out.println("stamina : "+p.stamina);
+                        System.out.println("max stamina : "+p.max_stamina);
+                        System.out.println("position : "+p.pos);
+                        System.out.println("strength : "+p.strength);
+                        if (p.currentWeapon != null){
+                            System.out.println("weapon : "+p.currentWeapon.name);
+                        }
+                    }catch (Exception e){
+                        System.out.println("Player not found...");
                     }
+
                 }
             }
         }

@@ -2,8 +2,13 @@ package fr.studiokakou.kakouquest;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL;
 
 import java.io.IOException;
+
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
+import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 public class DesktopLauncher {
@@ -22,6 +27,7 @@ public class DesktopLauncher {
 		}
 
 		config.setTitle("Kakou Quest");
+
 		new Lwjgl3Application(new GameSpace(), config);
 	}
 }

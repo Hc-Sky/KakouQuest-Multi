@@ -1,5 +1,6 @@
 package fr.studiokakou.kakouquest.map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import fr.studiokakou.kakouquest.utils.Utils;
 
@@ -14,6 +15,8 @@ public class Floor {
      */
     Point pos;
 
+    public String texturePath;
+
     /**
      * la largeur de la texture.
      */
@@ -26,7 +29,16 @@ public class Floor {
     /**
      * la liste des textures possibles.
      */
-    public static Texture[] POSSIBLE_TEXTURE = {new Texture("assets/map/floor_1.png"), new Texture("assets/map/floor_2.png"), new Texture("assets/map/floor_3.png"), new Texture("assets/map/floor_4.png"), new Texture("assets/map/floor_5.png"), new Texture("assets/map/floor_6.png"), new Texture("assets/map/floor_7.png"), new Texture("assets/map/floor_8.png"), };
+//    public static Texture[] POSSIBLE_TEXTURE = {
+//            new Texture(Gdx.files.internal("assets/map/floor_1.png")),
+//            new Texture(Gdx.files.internal("assets/map/floor_2.png")),
+//            new Texture(Gdx.files.internal("assets/map/floor_3.png")),
+//            new Texture(Gdx.files.internal("assets/map/floor_4.png")),
+//            new Texture(Gdx.files.internal("assets/map/floor_5.png")),
+//            new Texture(Gdx.files.internal("assets/map/floor_6.png")),
+//            new Texture(Gdx.files.internal("assets/map/floor_7.png")),
+//            new Texture(Gdx.files.internal("assets/map/floor_8.png")),
+//    };
 
     /**
      * La texture.
@@ -44,12 +56,17 @@ public class Floor {
     public Floor(float x, float y){
         this.pos = new Point(x, y);
 
-        if (Utils.randint(0,4) == 0){
-            this.texture = Floor.POSSIBLE_TEXTURE[Utils.randint(1,Floor.POSSIBLE_TEXTURE.length-1)];
-        }else {
-            this.texture = Floor.POSSIBLE_TEXTURE[0];
-        }
+//        if (Utils.randint(0,4) == 0){
+//            this.texture = Floor.POSSIBLE_TEXTURE[Utils.randint(1,Floor.POSSIBLE_TEXTURE.length-1)];
+//        }else {
+//            this.texture = Floor.POSSIBLE_TEXTURE[0];
+//        }
 
+    }
+
+    public Floor(OnlineFloor onlineFloor){
+        this.pos = new Point(onlineFloor.pos.x, onlineFloor.pos.y);
+        this.texturePath = onlineFloor.texturePath;
     }
 
     public ArrayList<Wall> getSurrounding(ArrayList<Floor> floors){
