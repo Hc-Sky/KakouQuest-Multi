@@ -1,7 +1,6 @@
 package fr.studiokakou.kakouquest.player;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class PlayerList {
     public ArrayList<OnlinePlayer> onlinePlayersArrayList;

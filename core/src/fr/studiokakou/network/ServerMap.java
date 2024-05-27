@@ -1,6 +1,5 @@
 package fr.studiokakou.network;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.map.*;
 import fr.studiokakou.kakouquest.utils.Utils;
 

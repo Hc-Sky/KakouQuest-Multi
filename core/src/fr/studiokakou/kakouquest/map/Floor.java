@@ -1,6 +1,5 @@
 package fr.studiokakou.kakouquest.map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import fr.studiokakou.kakouquest.utils.Utils;
 

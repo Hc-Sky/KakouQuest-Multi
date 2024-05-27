@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 
-import java.util.ArrayList;
 
 public class OnlinePlayerConstants {
     // le nombre de colonne de l'animation

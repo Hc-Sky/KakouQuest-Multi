@@ -2,7 +2,6 @@ package fr.studiokakou.kakouquest.map;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.network.ServerMap;
 
 import java.util.ArrayList;
@@ -165,14 +164,5 @@ public class Map {
         }
 
         return true;
-    }
-
-    /**
-     * Disposes resources.
-     */
-    public void dispose(){
-        for (Floor f : this.floors){
-            f.texture.dispose();
-        }
     }
 }

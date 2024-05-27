@@ -3,7 +3,6 @@ package fr.studiokakou.network;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.OnlinePlayer;
 import fr.studiokakou.kakouquest.player.PlayerList;
 import fr.studiokakou.network.message.ChangePlayerStatsMessage;

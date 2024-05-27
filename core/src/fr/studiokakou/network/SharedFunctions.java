@@ -4,7 +4,6 @@ import com.esotericsoftware.kryo.Kryo;
 import fr.studiokakou.kakouquest.map.*;
 import fr.studiokakou.kakouquest.player.OnlinePlayer;
 import fr.studiokakou.kakouquest.player.PlayerList;
-import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 import fr.studiokakou.kakouquest.weapon.OnlineMeleeWeapon;
 import fr.studiokakou.network.message.ChangePlayerStatsMessage;
 import fr.studiokakou.network.message.ConnectMessage;
