@@ -146,11 +146,9 @@ public class Player {
     }
 
     public void move(float x, float y, Map map){
-        boolean willMove = canMove(this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed), map);
-        System.out.println(willMove);
-        if (willMove){
+
+        if (canMove(this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed), map)){
             this.lastPos = this.pos;
-            System.out.println("moving from : " + this.pos + " to : " + this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed));
             this.pos = this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed);
         }
     }

@@ -86,6 +86,16 @@ public class OnlineGameScreen implements Screen {
 
 
         gameClient.client.sendTCP("getMap");
+
+        while (!player.hasPlayerSpawn){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        cam.centerPlayer();
     }
 
     @Override

@@ -76,6 +76,7 @@ public class OnlinePlayer {
         this.strength = player.strength;
         this.stamina=player.stamina;
         this.max_stamina=player.max_stamina;
+        this.speed = player.speed;
 
         this.staminaTimer=player.staminaTimer;
         this.attackTimer=player.attackTimer;
