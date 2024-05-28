@@ -2,6 +2,10 @@ package fr.studiokakou.kakouquest.player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import fr.studiokakou.kakouquest.network.GameClient;
+import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
+
+import java.util.ArrayList;
 
 /**
  * Represents a camera object used for rendering the game view.
@@ -54,18 +58,31 @@ public class Camera {
      * Updates the camera position based on the player's movement.
      */
     public void update(){
-        if (Camera.camera.position.x + Camera.CAM_X_DISTANCE < this.player.center().x){
-            Camera.camera.position.x = this.player.center().x - Camera.CAM_X_DISTANCE;
+
+        if (!player.hasPlayerSpawn){
+            for (OnlinePlayer onlinePlayer : OnlineGameScreen.onlinePlayers){
+                if (onlinePlayer.hasPlayerSpawn){
+                    Camera.camera.position.x = onlinePlayer.center().x;
+                    Camera.camera.position.y = onlinePlayer.center().y;
+                    break;
+                }
+            }
+        } else {
+            if (Camera.camera.position.x + Camera.CAM_X_DISTANCE < this.player.center().x){
+                Camera.camera.position.x = this.player.center().x - Camera.CAM_X_DISTANCE;
+            }
+            if (Camera.camera.position.x - Camera.CAM_X_DISTANCE > this.player.center().x){
+                Camera.camera.position.x = this.player.center().x + Camera.CAM_X_DISTANCE;
+            }
+            if (Camera.camera.position.y + Camera.CAM_Y_DISTANCE < this.player.center().y){
+                Camera.camera.position.y = this.player.center().y - Camera.CAM_Y_DISTANCE;
+            }
+            if (Camera.camera.position.y - Camera.CAM_Y_DISTANCE > this.player.center().y){
+                Camera.camera.position.y = this.player.center().y + Camera.CAM_Y_DISTANCE;
+            }
         }
-        if (Camera.camera.position.x - Camera.CAM_X_DISTANCE > this.player.center().x){
-            Camera.camera.position.x = this.player.center().x + Camera.CAM_X_DISTANCE;
-        }
-        if (Camera.camera.position.y + Camera.CAM_Y_DISTANCE < this.player.center().y){
-            Camera.camera.position.y = this.player.center().y - Camera.CAM_Y_DISTANCE;
-        }
-        if (Camera.camera.position.y - Camera.CAM_Y_DISTANCE > this.player.center().y){
-            Camera.camera.position.y = this.player.center().y + Camera.CAM_Y_DISTANCE;
-        }
+
+
         Camera.camera.update();
     }
 }

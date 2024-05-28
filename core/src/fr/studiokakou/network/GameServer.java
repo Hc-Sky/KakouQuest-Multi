@@ -3,6 +3,8 @@ package fr.studiokakou.network;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import fr.studiokakou.kakouquest.interactive.OnlineStairs;
+import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.OnlinePlayer;
 import fr.studiokakou.kakouquest.player.PlayerList;
 import fr.studiokakou.network.message.ChangePlayerStatsMessage;
@@ -21,7 +23,10 @@ public class GameServer implements Listener {
     public int maxPlayer;
     public String serverName;
 
+    //map & elements
+    public int currentLevel;
     public ServerMap map;
+    public OnlineStairs stairs;
 
     Thread commandThread;
 
@@ -41,8 +46,22 @@ public class GameServer implements Listener {
         onlinePlayers.clear();
 
         System.out.println("Creating map...");
+        this.currentLevel=1;
         this.map = new ServerMap(80, 80);
         System.out.println("Map created");
+        this.stairs = new OnlineStairs(map.getStairsPos());
+    }
+
+    public void nextLevel(){
+        this.currentLevel++;
+        this.map = new ServerMap(80, 80);
+        this.stairs = new OnlineStairs(map.getStairsPos());
+        sendMapToAll();
+        for (OnlinePlayer player : onlinePlayers.values()){
+            player.pos = map.getPlayerSpawn();
+            player.hasPlayerSpawn = true;
+            changePlayerStats(player);
+        }
     }
 
     public void startServer() throws IOException {
@@ -86,10 +105,25 @@ public class GameServer implements Listener {
 
             if (message.equals("getMap")){
                 server.sendToTCP(connection.getID(), map);
+                server.sendToTCP(connection.getID(), stairs);
                 OnlinePlayer player = onlinePlayers.get(connection.getID());
                 player.pos = map.getPlayerSpawn();
                 onlinePlayers.get(connection.getID()).hasPlayerSpawn = true;
                 server.sendToTCP(connection.getID(), new ChangePlayerStatsMessage(player));
+            }
+
+            if (message.equals("stairs")){
+                OnlinePlayer player = onlinePlayers.get(connection.getID());
+                if (!this.stairs.players.contains(player)){
+                    this.stairs.players.add(player);
+                    player.hasPlayerSpawn = false;
+                    player.pos = new Point(-100, -100);
+                    server.sendToTCP(connection.getID(), new ChangePlayerStatsMessage(player));
+
+                    if (this.stairs.players.size() == onlinePlayers.size()){
+                        nextLevel();
+                    }
+                }
             }
         }
     }
@@ -106,6 +140,11 @@ public class GameServer implements Listener {
         onlinePlayers.forEach((integer, onlinePlayer) -> {
             server.sendToTCP(integer, playerList);
         });
+    }
+
+    public void sendMapToAll(){
+        server.sendToAllTCP(map);
+        server.sendToAllTCP(stairs);
     }
 
     public void changePlayerStats(OnlinePlayer player){
