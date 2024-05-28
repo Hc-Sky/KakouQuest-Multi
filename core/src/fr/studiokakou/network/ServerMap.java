@@ -200,7 +200,6 @@ public class ServerMap {
     }
 
     public Point getStairsPos(){
-        //return this.rooms.get(this.rooms.size()-1).getCenterOutOfMap();
-        return this.rooms.get(0).getCenterOutOfMap().add(-8, -8);
+        return this.rooms.get(this.rooms.size()-1).getCenterOutOfMap().add(-8, -8);
     }
 }
