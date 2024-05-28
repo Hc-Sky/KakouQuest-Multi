@@ -1,6 +1,5 @@
 package fr.studiokakou.network;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.map.*;
 import fr.studiokakou.kakouquest.utils.Utils;
 
@@ -198,5 +197,9 @@ public class ServerMap {
         }
 
         return true;
+    }
+
+    public Point getStairsPos(){
+        return this.rooms.get(this.rooms.size()-1).getCenterOutOfMap().add(-8, -8);
     }
 }

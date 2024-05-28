@@ -3,6 +3,7 @@ package fr.studiokakou.kakouquest.network;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import fr.studiokakou.kakouquest.interactive.OnlineStairs;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.player.OnlinePlayerConstants;
 import fr.studiokakou.kakouquest.player.Player;
@@ -114,6 +115,14 @@ public class GameClient implements Listener {
             System.out.println(onlineMap.floors.size());
 
             OnlineGameScreen.map = new Map(onlineMap);
+        }
+
+        if (object instanceof OnlineStairs){
+            OnlineStairs onlineStairs = (OnlineStairs) object;
+
+            System.out.println("Received stairs");
+            OnlineGameScreen.map.stairs = onlineStairs.toStairs();
+            OnlineGameScreen.map.interactives.add(OnlineGameScreen.map.stairs);
         }
 
         if (object instanceof String){

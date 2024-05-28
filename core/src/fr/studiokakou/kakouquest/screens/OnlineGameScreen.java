@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.GameSpace;
+import fr.studiokakou.kakouquest.interactive.Interactive;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.network.GameClient;
@@ -23,7 +24,7 @@ import java.util.Scanner;
 public class OnlineGameScreen implements Screen {
 
     //network infos
-    public GameClient gameClient;
+    public static GameClient gameClient;
     public String ipAdress = "localhost";
     public int port = 8215;
     public int udp = 8216;
@@ -43,7 +44,7 @@ public class OnlineGameScreen implements Screen {
     SpriteBatch hudBatch;
 
     //players
-    public Player player;
+    public static Player player;
     public static ArrayList<OnlinePlayer> onlinePlayers = new ArrayList<>();
 
     // Temps écoulé depuis le début du jeu pour les animations.
@@ -84,6 +85,8 @@ public class OnlineGameScreen implements Screen {
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
         pm.dispose();
 
+        Interactive.init();
+
 
         gameClient.client.sendTCP("getMap");
 
@@ -109,9 +112,13 @@ public class OnlineGameScreen implements Screen {
         Gdx.gl.glClearColor(34/255f, 34/255f, 34/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        player.getKeyboardMove(map);
-        player.getOrientation();
-        player.dash(map);
+        if (player.hasPlayerSpawn){
+            player.getKeyboardMove(map);
+            player.getOrientation();
+            player.dash(map);
+        }
+
+        map.refreshInteract();
 
         gameClient.sendPlayer(player);
 

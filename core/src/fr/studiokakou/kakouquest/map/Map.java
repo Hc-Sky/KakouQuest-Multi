@@ -1,7 +1,13 @@
 package fr.studiokakou.kakouquest.map;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import fr.studiokakou.kakouquest.interactive.Interactive;
+import fr.studiokakou.kakouquest.interactive.Stairs;
+import fr.studiokakou.kakouquest.player.Player;
+import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.network.ServerMap;
 
@@ -30,6 +36,11 @@ public class Map {
     /**
      * The list of rooms.
      */
+
+    public Stairs stairs;
+
+    public ArrayList<Interactive> interactives = new ArrayList<>();
+
     ArrayList<Room> rooms =  new ArrayList<>();
     /**
      * The list of bridges.
@@ -63,6 +74,10 @@ public class Map {
 
     public static Texture[] FLOOR_TEXTURES;
     public static HashMap<String, Texture> WALL_TEXTURES;
+    public static Texture STAIRS_TEXTURE;
+
+    public static Animation<TextureRegion> interactKeyAnimation;
+
 
 
     /**
@@ -89,7 +104,7 @@ public class Map {
         WALL_TEXTURES.put("assets/map/wall_outer_mid_right.png", new Texture("assets/map/wall_outer_mid_right.png"));
         WALL_TEXTURES.put("assets/map/wall_outer_mid_left.png", new Texture("assets/map/wall_outer_mid_left.png"));
 
-
+        STAIRS_TEXTURE = new Texture("assets/map/floor_ladder.png");
     }
 
     public Map(ServerMap onlineMap){
@@ -112,6 +127,22 @@ public class Map {
         }
     }
 
+    public void refreshInteract(){
+        Interactive closest = interactives.get(0);
+        float minDistance = closest.getDistance(OnlineGameScreen.player);
+        for (Interactive interactive : this.interactives){
+            float distance = interactive.getDistance(OnlineGameScreen.player);
+            if (distance < minDistance){
+                minDistance = distance;
+                closest = interactive;
+            }
+        }
+
+        for (Interactive interactive : this.interactives){
+            interactive.refreshInteract(OnlineGameScreen.player, interactive == closest);
+        }
+    }
+
     /**
      * Draws the map.
      *
@@ -124,6 +155,10 @@ public class Map {
 
         for (Wall w : this.walls){
             batch.draw(WALL_TEXTURES.get(w.assetPath), w.pos.x*16, w.pos.y*16);
+        }
+
+        if (this.stairs != null){
+            this.stairs.draw(STAIRS_TEXTURE, batch);
         }
     }
 
@@ -165,14 +200,5 @@ public class Map {
         }
 
         return true;
-    }
-
-    /**
-     * Disposes resources.
-     */
-    public void dispose(){
-        for (Floor f : this.floors){
-            f.texture.dispose();
-        }
     }
 }

@@ -1,8 +1,5 @@
 package fr.studiokakou.kakouquest.map;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 /**
  * Represents a wall object in the game map.
  */

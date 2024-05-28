@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.*;
 import fr.studiokakou.kakouquest.constants.Constants;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
-import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.OnlineMeleeWeapon;
 import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 

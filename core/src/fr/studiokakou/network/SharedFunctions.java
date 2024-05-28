@@ -1,10 +1,11 @@
 package fr.studiokakou.network;
 
 import com.esotericsoftware.kryo.Kryo;
+import fr.studiokakou.kakouquest.interactive.OnlineStairs;
+import fr.studiokakou.kakouquest.interactive.Stairs;
 import fr.studiokakou.kakouquest.map.*;
 import fr.studiokakou.kakouquest.player.OnlinePlayer;
 import fr.studiokakou.kakouquest.player.PlayerList;
-import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 import fr.studiokakou.kakouquest.weapon.OnlineMeleeWeapon;
 import fr.studiokakou.network.message.ChangePlayerStatsMessage;
 import fr.studiokakou.network.message.ConnectMessage;
@@ -30,6 +31,7 @@ public class SharedFunctions {
         kryo.register(Bridge.class);
         kryo.register(Room.class);
         kryo.register(ServerMap.class);
+        kryo.register(OnlineStairs.class);
 
     }
 }
