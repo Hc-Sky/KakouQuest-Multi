@@ -1,5 +1,8 @@
 package fr.studiokakou.network;
 
+import fr.studiokakou.kakouquest.interactive.Chest;
+import fr.studiokakou.kakouquest.interactive.OnlineChest;
+import fr.studiokakou.kakouquest.interactive.Stairs;
 import fr.studiokakou.kakouquest.map.*;
 import fr.studiokakou.kakouquest.utils.Utils;
 
@@ -42,6 +45,8 @@ public class ServerMap {
      */
     public static int ROOM_MAX_WIDTH=21;
 
+    public ArrayList<OnlineChest> chests = new ArrayList<>();
+
 
     public ServerMap(int width, int height){
         this.map_height = height;
@@ -65,6 +70,8 @@ public class ServerMap {
         this.genWalls();
 
         this.getRealSize();
+
+        this.genInteractive(GameServer.currentLevel);
     }
 
     /**
@@ -201,5 +208,16 @@ public class ServerMap {
 
     public Point getStairsPos(){
         return this.rooms.get(this.rooms.size()-1).getCenterOutOfMap().add(-8, -8);
+    }
+
+    public void genInteractive(int currentLevel){
+
+        this.chests.clear();
+        for (Room r : rooms.subList(1, rooms.size()-2)){
+            if (Utils.randint(1, 1) == 1){
+                this.chests.add(new OnlineChest(r.getCenterOutOfMapPos(), currentLevel));
+            }
+        }
+
     }
 }

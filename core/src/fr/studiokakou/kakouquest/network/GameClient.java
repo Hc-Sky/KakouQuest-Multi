@@ -3,6 +3,8 @@ package fr.studiokakou.kakouquest.network;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import fr.studiokakou.kakouquest.interactive.Chest;
+import fr.studiokakou.kakouquest.interactive.OnlineChest;
 import fr.studiokakou.kakouquest.interactive.OnlineStairs;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.player.OnlinePlayerConstants;
@@ -16,6 +18,7 @@ import fr.studiokakou.network.message.ConnectMessage;
 import fr.studiokakou.network.message.IdMessage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class GameClient implements Listener {
     public Client client;
@@ -123,6 +126,17 @@ public class GameClient implements Listener {
             System.out.println("Received stairs");
             OnlineGameScreen.map.stairs = onlineStairs.toStairs();
             OnlineGameScreen.map.interactives.add(OnlineGameScreen.map.stairs);
+        }
+
+        if (object instanceof ArrayList){
+            Object firstElem = ((ArrayList<?>) object).get(0);
+            if (firstElem instanceof OnlineChest){
+                Map.chests.clear();
+                for (Object o : (ArrayList<?>) object){
+                    OnlineChest chest = (OnlineChest) o;
+                    Map.chests.add(new Chest(chest));
+                }
+            }
         }
 
         if (object instanceof String){

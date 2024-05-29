@@ -3,10 +3,12 @@ package fr.studiokakou.network;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import fr.studiokakou.kakouquest.interactive.OnlineChest;
 import fr.studiokakou.kakouquest.interactive.OnlineStairs;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.OnlinePlayer;
 import fr.studiokakou.kakouquest.player.PlayerList;
+import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 import fr.studiokakou.network.message.ChangePlayerStatsMessage;
 import fr.studiokakou.network.message.ConnectMessage;
 import fr.studiokakou.network.message.IdMessage;
@@ -24,7 +26,7 @@ public class GameServer implements Listener {
     public String serverName;
 
     //map & elements
-    public int currentLevel;
+    public static int currentLevel;
     public ServerMap map;
     public OnlineStairs stairs;
 
@@ -46,14 +48,15 @@ public class GameServer implements Listener {
         onlinePlayers.clear();
 
         System.out.println("Creating map...");
-        this.currentLevel=1;
+        currentLevel=1;
+        StaticsMeleeWeapon.createPossibleMeleeWeapons();
         this.map = new ServerMap(80, 80);
         System.out.println("Map created");
         this.stairs = new OnlineStairs(map.getStairsPos());
     }
 
     public void nextLevel(){
-        this.currentLevel++;
+        currentLevel++;
         this.map = new ServerMap(80, 80);
         this.stairs = new OnlineStairs(map.getStairsPos());
         sendMapToAll();
@@ -98,6 +101,18 @@ public class GameServer implements Listener {
             onlinePlayers.replace(connection.getID(), player);
 
             sendPlayersToAll();
+        }
+
+        if (object instanceof ArrayList){
+            Object firstElem = ((ArrayList<?>) object).get(0);
+            if (firstElem instanceof OnlineChest){
+                map.chests.clear();
+                for (Object o : (ArrayList<?>) object){
+                    OnlineChest chest = (OnlineChest) o;
+                    map.chests.add(chest);
+                }
+                server.sendToAllTCP(map.chests);
+            }
         }
 
         if (object instanceof String){

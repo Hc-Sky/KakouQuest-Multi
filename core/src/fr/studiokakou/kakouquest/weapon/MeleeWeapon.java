@@ -62,6 +62,10 @@ public class MeleeWeapon {
     }
 
     public MeleeWeapon(OnlineMeleeWeapon onlineMeleeWeapon) {
+        if (onlineMeleeWeapon == null){
+            return;
+        }
+
         //weapon stats
         this.name = onlineMeleeWeapon.name;
         this.damage = onlineMeleeWeapon.damage;
@@ -73,13 +77,16 @@ public class MeleeWeapon {
 
         //weapon texture
         this.texturePath = onlineMeleeWeapon.texturePath;
-        this.texture = StaticsMeleeWeapon.textureDictionary.get(texturePath);
-        this.sprite = new Sprite(this.texture);
-        this.sprite.setScale(this.size);
-        this.height = this.sprite.getHeight();
-        this.width = this.sprite.getWidth();
-        this.sprite.setOrigin(this.width/2, 0);
-        this.sprite.flip(true, false);
+        if (texturePath!= null){
+            this.texture = StaticsMeleeWeapon.textureDictionary.get(texturePath);
+            this.sprite = new Sprite(this.texture);
+            this.sprite.setScale(this.size);
+            this.height = this.sprite.getHeight();
+            this.width = this.sprite.getWidth();
+            this.sprite.setOrigin(this.width/2, 0);
+            this.sprite.flip(true, false);
+        }
+
     }
 
     /**

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.GameSpace;
+import fr.studiokakou.kakouquest.interactive.Chest;
 import fr.studiokakou.kakouquest.interactive.Interactive;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
@@ -86,6 +87,7 @@ public class OnlineGameScreen implements Screen {
         pm.dispose();
 
         Interactive.init();
+        Chest.init();
 
 
         gameClient.client.sendTCP("getMap");

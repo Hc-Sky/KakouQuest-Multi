@@ -1,6 +1,7 @@
 package fr.studiokakou.network;
 
 import com.esotericsoftware.kryo.Kryo;
+import fr.studiokakou.kakouquest.interactive.OnlineChest;
 import fr.studiokakou.kakouquest.interactive.OnlineStairs;
 import fr.studiokakou.kakouquest.interactive.Stairs;
 import fr.studiokakou.kakouquest.map.*;
@@ -32,6 +33,7 @@ public class SharedFunctions {
         kryo.register(Room.class);
         kryo.register(ServerMap.class);
         kryo.register(OnlineStairs.class);
+        kryo.register(OnlineChest.class);
 
     }
 }

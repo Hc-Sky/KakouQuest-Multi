@@ -24,16 +24,41 @@ public class Interactive {
 
     public boolean isClosest = false;
 
+    public boolean multipleInteract=false;
+
     public boolean canInteract;
+
+    public boolean hasInteracted = false;
 
     public Point pos;
 
     private Interactable interactable;
 
+    Object object;
+
     public Interactive(Point pos, Interactable interactable){
         this.pos = pos;
         this.canInteract=false;
         this.interactable = interactable;
+    }
+
+    public Interactive(Point pos, Interactable interactable, boolean multipleInteract){
+        this.pos = pos;
+        this.canInteract=false;
+        this.interactable = interactable;
+        this.multipleInteract = multipleInteract;
+    }
+
+    public Interactive(Point pos, Interactable interactable, boolean multipleInteract, boolean hasInteracted){
+        this.pos = pos;
+        this.canInteract=false;
+        this.interactable = interactable;
+        this.multipleInteract = multipleInteract;
+        this.hasInteracted = hasInteracted;
+    }
+
+    public void giveObject(Object object){
+        this.object = object;
     }
 
     public static void init(){
@@ -48,11 +73,20 @@ public class Interactive {
     }
 
     public void refreshInteract(Player player, boolean isClosest){
-        if (canInteract && Gdx.input.isKeyJustPressed(this.interactKeyCode)){
+        if (canInteract && Gdx.input.isKeyJustPressed(interactKeyCode) && (this.multipleInteract || !this.hasInteracted)){
+            if (object != null){
+                if (object instanceof Chest){
+                    ((Chest) object).open();
+                }
+            }
             this.interactable.interact();
+            if (!multipleInteract){
+                this.hasInteracted = true;
+                this.canInteract=false;
+            }
         }
 
-        if (Utils.getDistance(this.pos, player.pos) <= 40 &&  isClosest){
+        if (Utils.getDistance(this.pos, player.pos) <= 40 && isClosest && (this.multipleInteract || !this.hasInteracted)){
             this.canInteract = true;
         } else {
             this.canInteract = false;

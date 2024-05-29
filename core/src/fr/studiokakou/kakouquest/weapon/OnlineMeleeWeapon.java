@@ -32,7 +32,22 @@ public class OnlineMeleeWeapon {
         this.texturePath = texturePath;
     }
 
+    public OnlineMeleeWeapon(MeleeWeapon weapon){
+        if (weapon == null){
+            return;
+        }
+        this.name = weapon.name;
+        this.damage = weapon.damage;
+        this.maxResistance = weapon.resistance;
+        this.resistance = weapon.resistance;
+        this.attackRange = weapon.attackRange;
+        this.attackSpeed = weapon.attackSpeed;
+        this.size = weapon.size;
+        this.texturePath = weapon.texturePath;
+    }
+
     public OnlineMeleeWeapon getNew(){
+
         return new OnlineMeleeWeapon(this.name, this.texturePath, damage, maxResistance, attackRange, attackSpeed, size);
     }
 

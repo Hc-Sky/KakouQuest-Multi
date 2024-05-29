@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import fr.studiokakou.kakouquest.interactive.Chest;
 import fr.studiokakou.kakouquest.interactive.Interactive;
 import fr.studiokakou.kakouquest.interactive.Stairs;
 import fr.studiokakou.kakouquest.player.Player;
@@ -78,6 +79,7 @@ public class Map {
 
     public static Animation<TextureRegion> interactKeyAnimation;
 
+    public static ArrayList<Chest> chests = new ArrayList<>();
 
 
     /**
@@ -110,6 +112,8 @@ public class Map {
     public Map(ServerMap onlineMap){
 
         this.floors.clear();
+        this.walls.clear();
+        chests.clear();
 
         this.map_height = onlineMap.map_height;
         this.map_width = onlineMap.map_width;
@@ -124,6 +128,12 @@ public class Map {
 
         for (int i = 0; i < onlineMap.walls.size(); i++) {
             this.walls.add(new Wall(onlineMap.walls.get(i)));
+        }
+
+        for (int i = 0; i < onlineMap.chests.size(); i++) {
+            Chest chest = new Chest(onlineMap.chests.get(i));
+            chests.add(chest);
+            this.interactives.add(chest);
         }
     }
 
@@ -159,6 +169,10 @@ public class Map {
 
         if (this.stairs != null){
             this.stairs.draw(STAIRS_TEXTURE, batch);
+        }
+
+        for (Chest chest : chests){
+            chest.draw(batch);
         }
     }
 

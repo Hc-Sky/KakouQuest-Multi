@@ -33,6 +33,11 @@ public class CommandsManager implements Runnable {
             }
         }
 
+        else if (command.startsWith("regen")){
+            GameServer.currentLevel--;
+            gameServer.nextLevel();
+        }
+
         else if (command.startsWith("get")){
             String[] splitCommand = command.split(" ");
             if (splitCommand[1].equals("stats") || splitCommand[1].equals("stat")){
