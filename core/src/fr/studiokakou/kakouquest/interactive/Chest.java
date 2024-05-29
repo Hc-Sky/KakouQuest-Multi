@@ -74,7 +74,6 @@ public class Chest extends Interactive{
                 OnlineGameScreen.player.currentWeapon = this.meleeWeaponLoot;
                 this.meleeWeaponLoot = null;
             }
-            OnlineGameScreen.gameClient.client.sendTCP(OnlineChest.chestsListToOnlineChests(Map.chests));
         }
     }
 

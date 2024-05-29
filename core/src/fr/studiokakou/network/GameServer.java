@@ -105,14 +105,7 @@ public class GameServer implements Listener {
 
         if (object instanceof ArrayList){
             Object firstElem = ((ArrayList<?>) object).get(0);
-            if (firstElem instanceof OnlineChest){
-                map.chests.clear();
-                for (Object o : (ArrayList<?>) object){
-                    OnlineChest chest = (OnlineChest) o;
-                    map.chests.add(chest);
-                }
-                server.sendToAllTCP(map.chests);
-            }
+
         }
 
         if (object instanceof String){
