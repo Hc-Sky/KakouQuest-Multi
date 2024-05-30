@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.GameSpace;
+import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.interactive.Chest;
 import fr.studiokakou.kakouquest.interactive.Interactive;
 import fr.studiokakou.kakouquest.map.Map;
@@ -66,6 +67,7 @@ public class OnlineGameScreen implements Screen {
         StaticsMeleeWeapon.createTextureDictionary();
 
         map = new Map(1, 1);
+        Monster.init();
 
         // Initialisation du joueur
         this.player = new Player(new Point(100, 100));

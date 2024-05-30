@@ -106,6 +106,11 @@ public class OnlinePlayer {
 
     }
 
+    public void takeDamage(int damage){
+        this.hp -= damage;
+        this.bloodStateTime = 0f;
+    }
+
     public void addMeleeWeapon(OnlineMeleeWeapon meleeWeapon){
         this.currentWeapon = meleeWeapon;
     }

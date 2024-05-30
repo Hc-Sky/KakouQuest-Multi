@@ -66,23 +66,41 @@ public class Point {
      */
     public static Point getOrientation(Point start, Point end){
         //retourne un Point dont les valeurs de x et y ne peuvent etre que -1, 0 ou 1
-        float x = end.x - start.x;
-        float y = end.y - start.y;
-        float totalDistance = (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-        float ratioX = x / totalDistance;
-        float ratioY = y / totalDistance;
+//        float x = end.x - start.x;
+//        float y = end.y - start.y;
+//        float totalDistance = (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+//        float ratioX = x / totalDistance;
+//        float ratioY = y / totalDistance;
+//
+//        if (ratioX > 1){
+//            x = 1;
+//        } else if (ratioX < -1){
+//            x = -1;
+//        } else {
+//            x = 0;
+//        }
+//
+//        if (ratioY > 0){
+//            y = 1;
+//        } else if (ratioY < 0){
+//            y = -1;
+//        } else {
+//            y = 0;
+//        }
 
-        if (ratioX > 0){
+        float x, y;
+
+        if (start.x+0.1 < end.x){
             x = 1;
-        } else if (ratioX < 0){
+        } else if (start.x > end.x+0.1){
             x = -1;
         } else {
             x = 0;
         }
 
-        if (ratioY > 0){
+        if (start.y+0.5 < end.y){
             y = 1;
-        } else if (ratioY < 0){
+        } else if (start.y > end.y+0.5){
             y = -1;
         } else {
             y = 0;

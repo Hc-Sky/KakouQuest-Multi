@@ -3,11 +3,15 @@ package fr.studiokakou.network;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import fr.studiokakou.kakouquest.interactive.OnlineChest;
+import fr.studiokakou.kakouquest.entity.OnlineMonster;
+import fr.studiokakou.kakouquest.entity.StaticMonster;
 import fr.studiokakou.kakouquest.interactive.OnlineStairs;
+import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Point;
+import fr.studiokakou.kakouquest.map.Room;
 import fr.studiokakou.kakouquest.player.OnlinePlayer;
 import fr.studiokakou.kakouquest.player.PlayerList;
+import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 import fr.studiokakou.network.message.ChangePlayerStatsMessage;
 import fr.studiokakou.network.message.ConnectMessage;
@@ -29,8 +33,10 @@ public class GameServer implements Listener {
     public static int currentLevel;
     public ServerMap map;
     public OnlineStairs stairs;
+    public ArrayList<OnlineMonster> monsters = new ArrayList<>();
 
     Thread commandThread;
+    Thread monsterThread;
 
     //tableau des joueurs (id, onlinePlayer)
     public static Map<Integer, OnlinePlayer> onlinePlayers = new HashMap<>();
@@ -44,22 +50,69 @@ public class GameServer implements Listener {
         this.serverName = GetConfig.getStringProperty("SERVER_NAME");
 
         this.commandThread = new Thread(new CommandsManager(this));
+        this.monsterThread = new Thread(new MonsterManager(this));
 
         onlinePlayers.clear();
 
         System.out.println("Creating map...");
+
         currentLevel=1;
+
         StaticsMeleeWeapon.createPossibleMeleeWeapons();
         this.map = new ServerMap(80, 80);
         System.out.println("Map created");
         this.stairs = new OnlineStairs(map.getStairsPos());
+
+        System.out.println("Generating monsters...");
+        StaticMonster.createPossibleMonsters(currentLevel);
+        genMonsters();
+        System.out.println("Monsters generated");
+
+    }
+
+    public void genMonsters(){
+        monsters.clear();
+        ArrayList<Integer> randomRarity = new ArrayList<>();
+
+        int currentID=0;
+
+        for (int i = 1; i <= currentLevel; i++) {
+            for (int j = 0; j <= currentLevel-i; j++) {
+                if (StaticMonster.possibleMonsters.get(i)!=null){
+                    randomRarity.add(i);
+                }
+            }
+        }
+
+        for (Room r : map.rooms.subList(1, map.rooms.size())){
+            for (int i = (int) r.start.x+1; i < r.end.x-1; i++) {
+                if (Utils.randint(0, 7)==0){
+                    int rarity = randomRarity.get(Utils.randint(0, randomRarity.size() - 1));
+                    ArrayList<OnlineMonster> mList = StaticMonster.possibleMonsters.get(rarity);
+                    while ( mList==null || mList.isEmpty()){
+                        rarity = randomRarity.get(Utils.randint(0, randomRarity.size() - 1));
+                        mList = StaticMonster.possibleMonsters.get(rarity);
+                    }
+                    OnlineMonster m = mList.get(Utils.randint(0, mList.size()-1));
+                    m.place(new Point(i* Floor.TEXTURE_WIDTH, Utils.randint((int) r.start.y+1, (int) r.end.y-1)*Floor.TEXTURE_HEIGHT));
+                    m.setId(currentID);
+                    monsters.add(m);
+                    StaticMonster.createPossibleMonsters(currentLevel);
+                    currentID++;
+                }
+            }
+        }
     }
 
     public void nextLevel(){
         currentLevel++;
         this.map = new ServerMap(80, 80);
         this.stairs = new OnlineStairs(map.getStairsPos());
+        StaticMonster.createPossibleMonsters(currentLevel);
+        genMonsters();
+
         sendMapToAll();
+        sendMonstersToAll();
         for (OnlinePlayer player : onlinePlayers.values()){
             player.pos = map.getPlayerSpawn();
             player.hasPlayerSpawn = true;
@@ -77,6 +130,7 @@ public class GameServer implements Listener {
         System.out.println("Server IP Adress : " + InetAddress.getLocalHost().getHostAddress());
 
         commandThread.start();
+        monsterThread.start();
     }
 
     public void received(Connection connection, Object object) {
@@ -103,9 +157,25 @@ public class GameServer implements Listener {
             sendPlayersToAll();
         }
 
+        if (object instanceof OnlineMonster){
+            System.out.println("Received monster");
+            OnlineMonster monster = (OnlineMonster) object;
+            monsters.forEach(m -> {
+                if (m.id == monster.id){
+                    System.out.println("Taking damage "+monster.hp);
+                    m.hp = monster.hp;
+                    m.isDying = monster.isDying;
+                    m.isRed = monster.isRed;
+                    m.bloodStateTime = monster.bloodStateTime;
+                    m.hitStart = monster.hitStart;
+                    m.player_hitted = monster.player_hitted;
+                    m.currentAttackTime = monster.currentAttackTime;
+                }
+            });
+        }
+
         if (object instanceof ArrayList){
             Object firstElem = ((ArrayList<?>) object).get(0);
-
         }
 
         if (object instanceof String){
@@ -114,6 +184,7 @@ public class GameServer implements Listener {
             if (message.equals("getMap")){
                 server.sendToTCP(connection.getID(), map);
                 server.sendToTCP(connection.getID(), stairs);
+                server.sendToTCP(connection.getID(), monsters);
                 OnlinePlayer player = onlinePlayers.get(connection.getID());
                 player.pos = map.getPlayerSpawn();
                 onlinePlayers.get(connection.getID()).hasPlayerSpawn = true;
@@ -153,6 +224,10 @@ public class GameServer implements Listener {
     public void sendMapToAll(){
         server.sendToAllTCP(map);
         server.sendToAllTCP(stairs);
+    }
+
+    public void sendMonstersToAll(){
+        server.sendToAllTCP(monsters);
     }
 
     public void changePlayerStats(OnlinePlayer player){

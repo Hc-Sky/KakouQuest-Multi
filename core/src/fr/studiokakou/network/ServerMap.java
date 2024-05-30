@@ -1,8 +1,6 @@
 package fr.studiokakou.network;
 
-import fr.studiokakou.kakouquest.interactive.Chest;
 import fr.studiokakou.kakouquest.interactive.OnlineChest;
-import fr.studiokakou.kakouquest.interactive.Stairs;
 import fr.studiokakou.kakouquest.map.*;
 import fr.studiokakou.kakouquest.utils.Utils;
 
@@ -214,7 +212,7 @@ public class ServerMap {
 
         this.chests.clear();
         for (Room r : rooms.subList(1, rooms.size()-2)){
-            if (Utils.randint(1, 1) == 1){
+            if (Utils.randint(1, 4) == 1){
                 this.chests.add(new OnlineChest(r.getCenterOutOfMapPos(), currentLevel));
             }
         }

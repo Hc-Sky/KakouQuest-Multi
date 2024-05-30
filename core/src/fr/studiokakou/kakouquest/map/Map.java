@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.interactive.Chest;
 import fr.studiokakou.kakouquest.interactive.Interactive;
 import fr.studiokakou.kakouquest.interactive.Stairs;
@@ -39,6 +40,8 @@ public class Map {
      */
 
     public Stairs stairs;
+
+    public boolean drawingMonsters = false;
 
     public ArrayList<Interactive> interactives = new ArrayList<>();
 
@@ -80,6 +83,8 @@ public class Map {
     public static Animation<TextureRegion> interactKeyAnimation;
 
     public static ArrayList<Chest> chests = new ArrayList<>();
+
+    public static ArrayList<Monster> monsters = new ArrayList<>();
 
 
     /**
@@ -174,6 +179,15 @@ public class Map {
         for (Chest chest : chests){
             chest.draw(batch);
         }
+
+        this.drawingMonsters=true;
+        ArrayList<Monster> monsterstmp = new ArrayList<>(Map.monsters);
+        int size = monsterstmp.size();
+        for (int i = 0; i < size; i++) {
+            Monster monster = monsterstmp.get(i);
+            monster.draw(batch);
+        }
+        this.drawingMonsters=false;
     }
 
     /**

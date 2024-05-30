@@ -5,7 +5,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import fr.studiokakou.kakouquest.constants.Constants;
+import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Map;
@@ -13,6 +15,7 @@ import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
+import fr.studiokakou.kakouquest.weapon.OnlineMeleeWeapon;
 import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 
 import java.time.LocalDateTime;
@@ -279,6 +282,8 @@ public class Player {
 
             this.currentWeapon.sprite.draw(batch);
 
+            this.checkHit();
+
             this.attackRotation += this.currentWeapon.attackSpeed*Gdx.graphics.getDeltaTime()*1000;
             this.attackPos = Point.getPosWithAngle(this.center(), Player.PLAYER_MELEE_WEAPON_DISTANCE, this.attackRotation);
         }else if (this.attackTimer==null){
@@ -291,8 +296,6 @@ public class Player {
     }
 
 
-
-
     /**
      *
      * Permet de récupérer l'orientation du joueur.
@@ -300,6 +303,23 @@ public class Player {
     public void getOrientation(){
         Point mousePos = Utils.mousePosUnproject(Camera.camera);
         this.flip= mousePos.x < this.center().x;
+    }
+
+    public void checkHit(){
+        Rectangle meleeWeaponRectangle = this.currentWeapon.sprite.getBoundingRectangle();
+        for (Monster m : Map.monsters){
+            Rectangle mRectangle = m.sprite.getBoundingRectangle();
+            if (meleeWeaponRectangle.overlaps(mRectangle)){
+                boolean damaged = m.hit(this);
+                if (damaged){
+                    this.currentWeapon.resistance-=1;
+                    System.out.println(this.currentWeapon.resistance);
+                    if (currentWeapon.resistance<=0 && currentWeapon.resistance>-100){
+                        this.currentWeapon = new MeleeWeapon(StaticsMeleeWeapon.RUSTY_SWORD());
+                    }
+                }
+            }
+        }
     }
 
 

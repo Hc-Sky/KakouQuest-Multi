@@ -3,6 +3,8 @@ package fr.studiokakou.kakouquest.network;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import fr.studiokakou.kakouquest.entity.Monster;
+import fr.studiokakou.kakouquest.entity.OnlineMonster;
 import fr.studiokakou.kakouquest.interactive.Chest;
 import fr.studiokakou.kakouquest.interactive.OnlineChest;
 import fr.studiokakou.kakouquest.interactive.OnlineStairs;
@@ -114,16 +116,12 @@ public class GameClient implements Listener {
         if (object instanceof ServerMap){
             ServerMap onlineMap = (ServerMap) object;
 
-            System.out.println("Received a map");
-            System.out.println(onlineMap.floors.size());
-
             OnlineGameScreen.map = new Map(onlineMap);
         }
 
         if (object instanceof OnlineStairs){
             OnlineStairs onlineStairs = (OnlineStairs) object;
 
-            System.out.println("Received stairs");
             OnlineGameScreen.map.stairs = onlineStairs.toStairs();
             OnlineGameScreen.map.interactives.add(OnlineGameScreen.map.stairs);
         }
@@ -135,6 +133,17 @@ public class GameClient implements Listener {
                 for (Object o : (ArrayList<?>) object){
                     OnlineChest chest = (OnlineChest) o;
                     Map.chests.add(new Chest(chest));
+                }
+            }
+
+            if (firstElem instanceof OnlineMonster){
+
+                if (!OnlineGameScreen.map.drawingMonsters){
+                    Map.monsters.clear();
+                    for (Object o : (ArrayList<?>) object){
+                        OnlineMonster monster = (OnlineMonster) o;
+                        Map.monsters.add(new Monster(monster));
+                    }
                 }
             }
         }
