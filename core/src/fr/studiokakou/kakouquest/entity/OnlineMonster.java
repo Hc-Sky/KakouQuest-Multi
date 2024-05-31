@@ -33,8 +33,8 @@ public class OnlineMonster {
     public boolean isRunning;
     public boolean isFlip;
 
-    public boolean isDying=false;
-    public boolean isDead = false;
+    public boolean isDying;
+    public boolean isDead;
 
     public boolean isRed;
     public LocalDateTime hitStart=null;
@@ -65,6 +65,8 @@ public class OnlineMonster {
         this.isFlip =  Utils.randint(0, 1)==0;
         this.isRunning = false;
         this.player_hitted.clear();
+        this.isDying = false;
+        this.isDead = false;
     }
 
     public OnlineMonster (Monster monster){
@@ -76,7 +78,7 @@ public class OnlineMonster {
         this.detectRange = monster.detectRange;
         this.idleAnimationPath = monster.idleAnimationPath;
         this.runAnimationPath = monster.runAnimationPath;
-        this.isRed=false;
+        this.isRed=monster.isRed;
         this.width = monster.width;
         this.height = monster.height;
         this.pos = monster.pos;
@@ -87,6 +89,7 @@ public class OnlineMonster {
         this.isFlip = monster.isFlip;
         this.player_hitted = monster.player_hitted;
         this.id = monster.id;
+        this.hitStart = monster.hitStart;
 
     }
 
@@ -156,7 +159,7 @@ public class OnlineMonster {
 
         Point playerPos = player.pos;
 
-        if (Utils.distance(playerPos, this.pos)<=7){
+        if (Utils.distance(playerPos, this.pos)<=10){
             this.attack(player);
             return;
         }

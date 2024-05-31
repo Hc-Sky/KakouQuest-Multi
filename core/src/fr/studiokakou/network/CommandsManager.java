@@ -33,6 +33,17 @@ public class CommandsManager implements Runnable {
             }
         }
 
+        else if(command.startsWith("help") || command.equals("h")){
+            System.out.println("Commands : ");
+            System.out.println("list players : list all players");
+            System.out.println("regen : regenerate the current level");
+            System.out.println("get stats [username] : get stats of a player");
+            System.out.println("kick [username] : kick a player");
+            System.out.println("set stat speed [username] [value] : set speed of a player");
+            System.out.println("set weapon rusty [username] : set rusty sword to a player");
+            System.out.println("set weapon anime [username] : set anime sword to a player");
+        }
+
         else if (command.startsWith("regen")){
             GameServer.currentLevel--;
             gameServer.nextLevel();
@@ -52,6 +63,8 @@ public class CommandsManager implements Runnable {
                         System.out.println("strength : "+p.strength);
                         if (p.currentWeapon != null){
                             System.out.println("weapon : "+p.currentWeapon.name);
+                        } else {
+                            System.out.println("weapon : none");
                         }
                     }catch (Exception e){
                         System.out.println("Player not found...");

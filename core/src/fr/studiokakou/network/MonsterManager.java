@@ -27,6 +27,12 @@ public class MonsterManager implements Runnable {
                 gameServer.monsters.get(i).move(gameServer.map);
                 gameServer.monsters.get(i).updateHit();
             }
+            for (int i = 0; i < gameServer.monsters.size(); i++) {
+                if (gameServer.monsters.get(i).isDead) {
+                    gameServer.monsters.remove(i);
+                    i--;
+                }
+            }
             gameServer.sendMonstersToAll();
             try {
                 Thread.sleep(1000 / 60);

@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.Objects;
 
 public class Monster {
     /** The name of the monster. */
@@ -102,6 +101,7 @@ public class Monster {
 
         this.currentAttackTime = monster.currentAttackTime;
         this.player_hitted = monster.player_hitted;
+        this.hitStart= monster.hitStart;
 
         this.id = monster.id;
 
