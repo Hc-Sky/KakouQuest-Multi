@@ -124,7 +124,9 @@ public class OnlineGameScreen implements Screen {
 
         map.refreshInteract();
 
-        gameClient.sendPlayer(player);
+        if (!player.isDead){
+            gameClient.sendPlayer(player);
+        }
 
         cam.update();
 

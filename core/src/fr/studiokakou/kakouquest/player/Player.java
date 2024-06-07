@@ -32,6 +32,7 @@ public class Player {
     public float speed; // The speed of the player
     public float stamina; // The stamina of the player
     public int max_stamina; // The maximum stamina of the player
+    public boolean isDead;
 
 
     //l'arme actuelle
@@ -137,6 +138,7 @@ public class Player {
         this.max_stamina = 100;
         this.stamina = 100;
         this.currentWeapon = StaticsMeleeWeapon.onlineToMeleeWeapon(StaticsMeleeWeapon.RUSTY_SWORD());
+        this.isDead=false;
     }
 
     /**
@@ -408,11 +410,18 @@ public class Player {
     public void takeDamage(int damage){
         this.hp -= damage;
         this.bloodStateTime=0f;
+
+        if (this.hp <= 0){
+            this.hp = this.max_hp;
+            this.isDead=true;
+            this.hasPlayerSpawn=false;
+            this.currentWeapon = StaticsMeleeWeapon.onlineToMeleeWeapon(StaticsMeleeWeapon.RUSTY_SWORD());
+            OnlineGameScreen.gameClient.client.sendTCP(OnlinePlayerConstants.mainToOnlinePlayer(this));
+        }
     }
 
     public void changePlayerStats(OnlinePlayer onlinePlayer){
 
-        this.hasPlayerSpawn = onlinePlayer.hasPlayerSpawn;
         this.pos = onlinePlayer.pos;
 
         // Update the player's stats based on the OnlinePlayer object
@@ -422,6 +431,9 @@ public class Player {
         this.speed = onlinePlayer.speed;
         this.stamina = onlinePlayer.stamina;
         this.max_stamina = onlinePlayer.max_stamina;
+
+        this.isDead = onlinePlayer.isDead;
+        this.hasPlayerSpawn = onlinePlayer.hasPlayerSpawn;
 
         if (onlinePlayer.currentWeapon != null){
             System.out.println("changing weapon");

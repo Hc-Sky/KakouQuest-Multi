@@ -9,6 +9,7 @@ import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.network.GameServer;
 import fr.studiokakou.network.ServerMap;
+import fr.studiokakou.network.message.PlayerHitMessage;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -137,7 +138,7 @@ public class OnlineMonster {
         double minDistance = Double.MAX_VALUE;
         for (OnlinePlayer player : GameServer.onlinePlayers.values()){
             double distance = Utils.distance(this.pos, player.pos);
-            if (distance<minDistance){
+            if (distance<minDistance && player.hasPlayerSpawn && !player.isDead ){
                 minDistance = distance;
                 closestPlayer = player;
             }
@@ -154,7 +155,7 @@ public class OnlineMonster {
         }
 
         if (isDying || isRed || !player.hasPlayerSpawn){
-            return;
+            this.attack(player);
         }
 
         Point playerPos = player.pos;
@@ -188,7 +189,7 @@ public class OnlineMonster {
             return;
         }
         if (this.currentAttackTime==null || this.currentAttackTime.plusNanos((long) (1000000*this.attackPause)).isBefore(LocalDateTime.now())){
-            player.takeDamage(this.damage);
+            GameServer.server.sendToTCP(GameServer.getIdWithUsername(player.username), new PlayerHitMessage(this));
             this.currentAttackTime = LocalDateTime.now();
         }
     }

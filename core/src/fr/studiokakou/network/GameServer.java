@@ -22,7 +22,7 @@ import java.net.InetAddress;
 import java.util.*;
 
 public class GameServer implements Listener {
-    public Server server;
+    public static Server server;
 
     public int PORT;
     public int udp;
@@ -70,6 +70,27 @@ public class GameServer implements Listener {
 
     }
 
+    public void restart(){
+        System.out.println("Creating map...");
+
+        currentLevel=1;
+        this.map = new ServerMap(80, 80);
+        this.stairs = new OnlineStairs(map.getStairsPos());
+        StaticMonster.createPossibleMonsters(currentLevel);
+        genMonsters();
+
+        sendMapToAll();
+        sendMonstersToAll();
+
+        for (OnlinePlayer player : onlinePlayers.values()){
+            player.pos = map.getPlayerSpawn();
+            player.hasPlayerSpawn = true;
+            player.isDead= false;
+            player.hp = player.max_hp;
+            changePlayerStats(player);
+        }
+    }
+
     public void genMonsters(){
         monsters.clear();
         ArrayList<Integer> randomRarity = new ArrayList<>();
@@ -115,7 +136,8 @@ public class GameServer implements Listener {
         sendMonstersToAll();
         for (OnlinePlayer player : onlinePlayers.values()){
             player.pos = map.getPlayerSpawn();
-            player.hasPlayerSpawn = true;
+            player.isDead = false;
+            player.hp = player.max_hp;
             changePlayerStats(player);
         }
     }
@@ -140,9 +162,11 @@ public class GameServer implements Listener {
             ConnectMessage connectMessage = (ConnectMessage) object;
             OnlinePlayer onlinePlayer = connectMessage.player;
             int id = connection.getID();
+
             if (onlinePlayers.containsKey(id)){
                 onlinePlayers.remove(id);
             }
+
             onlinePlayers.put(id, onlinePlayer);
 
             System.out.println("New player ["+onlinePlayer.username+"] connected with id : "+connection.getID());
@@ -151,8 +175,24 @@ public class GameServer implements Listener {
         }
 
         if (object instanceof OnlinePlayer){
-            OnlinePlayer player = (OnlinePlayer) object;
-            onlinePlayers.replace(connection.getID(), player);
+            OnlinePlayer onlinePlayer = (OnlinePlayer) object;
+
+            System.out.println("Received player : "+ onlinePlayer.isDead);
+            onlinePlayers.replace(connection.getID(), onlinePlayer);
+
+            if (onlinePlayer.isDead){
+                boolean allDead=true;
+                for (OnlinePlayer p : onlinePlayers.values()){
+                    if (!p.isDead){
+                        allDead=false;
+                    }
+                }
+
+                if (allDead){
+                    System.out.println("All players are dead");
+                    restart();
+                }
+            }
 
             sendPlayersToAll();
         }
@@ -237,7 +277,7 @@ public class GameServer implements Listener {
 
 
     static int researchInt;
-    public int getIdWithUsername(String username){
+    public static int getIdWithUsername(String username){
         onlinePlayers.forEach((integer, onlinePlayer) -> {
             if(Objects.equals(onlinePlayer.username, username)){
                 researchInt = integer.intValue();

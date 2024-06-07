@@ -22,7 +22,9 @@ public class OnlinePlayerConstants {
 
     public static void drawOnlinePlayers(SpriteBatch batch){
         for (OnlinePlayer onlinePlayer : OnlineGameScreen.onlinePlayers){
-            onlinePlayer.draw(batch);
+            if (onlinePlayer.hasPlayerSpawn && !onlinePlayer.isDead){
+                onlinePlayer.draw(batch);
+            }
         }
     }
 

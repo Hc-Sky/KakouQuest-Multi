@@ -12,6 +12,7 @@ import fr.studiokakou.kakouquest.weapon.OnlineMeleeWeapon;
 import fr.studiokakou.network.message.ChangePlayerStatsMessage;
 import fr.studiokakou.network.message.ConnectMessage;
 import fr.studiokakou.network.message.IdMessage;
+import fr.studiokakou.network.message.PlayerHitMessage;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class SharedFunctions {
         kryo.register(OnlineStairs.class);
         kryo.register(OnlineChest.class);
         kryo.register(OnlineMonster.class);
+        kryo.register(PlayerHitMessage.class);
 
     }
 }

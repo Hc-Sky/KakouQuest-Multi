@@ -24,8 +24,9 @@ public class OnlinePlayer {
     public float speed; // The speed of the player
     public float stamina; // The stamina of the player
     public int max_stamina; // The maximum stamina of the player
+    public boolean isDead;
 
-    //attach infos
+    //attack infos
     LocalDateTime staminaTimer;
     LocalDateTime attackTimer;
     public boolean isAttacking=false;
@@ -76,6 +77,7 @@ public class OnlinePlayer {
         this.stamina=player.stamina;
         this.max_stamina=player.max_stamina;
         this.speed = player.speed;
+        this.isDead=player.isDead;
 
         this.staminaTimer=player.staminaTimer;
         this.attackTimer=player.attackTimer;

@@ -18,6 +18,7 @@ import fr.studiokakou.network.SharedFunctions;
 import fr.studiokakou.network.message.ChangePlayerStatsMessage;
 import fr.studiokakou.network.message.ConnectMessage;
 import fr.studiokakou.network.message.IdMessage;
+import fr.studiokakou.network.message.PlayerHitMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -124,6 +125,13 @@ public class GameClient implements Listener {
 
             OnlineGameScreen.map.stairs = onlineStairs.toStairs();
             OnlineGameScreen.map.interactives.add(OnlineGameScreen.map.stairs);
+        }
+
+        if (object instanceof PlayerHitMessage){
+            PlayerHitMessage playerHitMessage = (PlayerHitMessage) object;
+
+            OnlineGameScreen.player.takeDamage(playerHitMessage.monster.damage);
+            System.out.println("You got hit by a monster : "+OnlineGameScreen.player.hp);
         }
 
         if (object instanceof ArrayList){
