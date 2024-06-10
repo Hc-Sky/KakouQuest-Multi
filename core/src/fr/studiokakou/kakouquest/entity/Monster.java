@@ -18,16 +18,12 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 public class Monster {
-    /** The name of the monster. */
     public String name;
-    /** The position of the monster. */
     public Point pos;
-    /** The speed of the monster. */
     public float speed;
-    /** The damage inflicted by the monster. */
     public int damage;
-    /** The time pause between attacks. */
     public float attackPause;
+    public int xp;
 
     LocalDateTime currentAttackTime;
     /** The hit points of the monster. */
@@ -76,6 +72,8 @@ public class Monster {
         this.damage = monster.damage;
         this.attackPause = monster.attackPause;
         this.hp = monster.hp;
+        this.xp = monster.xp;
+
         this.detectRange = monster.detectRange;
         this.idleAnimationPath = monster.idleAnimationPath;
         this.runAnimationPath = monster.runAnimationPath;
@@ -125,6 +123,7 @@ public class Monster {
         this.hp -= player.currentWeapon.damage*(player.strength/10);
         if (this.hp <= 0){
             this.isDying=true;
+            player.gainExperience(this.xp);
         }
     }
 

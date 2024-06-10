@@ -42,6 +42,7 @@ public class CommandsManager implements Runnable {
             System.out.println("set stat speed [username] [value] : set speed of a player");
             System.out.println("set weapon rusty [username] : set rusty sword to a player");
             System.out.println("set weapon anime [username] : set anime sword to a player");
+            System.out.println("give xp [username] [value] : give xp to a player");
         }
 
         else if (command.startsWith("regen")){
@@ -99,6 +100,15 @@ public class CommandsManager implements Runnable {
                     GameServer.onlinePlayers.get(id).currentWeapon = StaticsMeleeWeapon.ANIME_SWORD();
                     gameServer.changePlayerStats(GameServer.onlinePlayers.get(id));
                 }
+            }
+        }
+
+        else if(command.startsWith("give")){
+            String[] splitCommand = command.split(" ");
+            if (splitCommand[1].equals("xp")){
+                int id = gameServer.getIdWithUsername(splitCommand[2]);
+                GameServer.onlinePlayers.get(id).experience += Integer.parseInt(splitCommand[3]);
+                gameServer.changePlayerStats(GameServer.onlinePlayers.get(id));
             }
         }
 

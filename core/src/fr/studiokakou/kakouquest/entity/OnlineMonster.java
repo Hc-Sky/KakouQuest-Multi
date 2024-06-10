@@ -19,6 +19,7 @@ public class OnlineMonster {
     public Point pos;
     public float speed;
     public int damage;
+    public int xp;
 
     /** The time pause between attacks. */
     public float attackPause;
@@ -50,7 +51,7 @@ public class OnlineMonster {
 
     public int id;
 
-    public OnlineMonster(String name, String idleAnimationPath, String runAnimationPath, int hp, int damage, float attackPause, float speed, int detectRange, int currentLevel, double height, double width){
+    public OnlineMonster(String name, String idleAnimationPath, String runAnimationPath, int hp, int damage, float attackPause, float speed, int detectRange, int currentLevel, double height, double width, int xp){
         this.name = name;
         this.speed = speed;
         this.damage = damage;
@@ -68,12 +69,14 @@ public class OnlineMonster {
         this.player_hitted.clear();
         this.isDying = false;
         this.isDead = false;
+        this.xp = xp;
     }
 
     public OnlineMonster (Monster monster){
         this.name = monster.name;
         this.speed = monster.speed;
         this.damage = monster.damage;
+        this.xp = monster.xp;
         this.attackPause = monster.attackPause;
         this.hp = monster.hp;
         this.detectRange = monster.detectRange;

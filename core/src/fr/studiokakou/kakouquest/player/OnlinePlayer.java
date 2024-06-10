@@ -25,6 +25,10 @@ public class OnlinePlayer {
     public float stamina; // The stamina of the player
     public int max_stamina; // The maximum stamina of the player
     public boolean isDead;
+    public int playerLevel;
+    public double experience;
+    public double experienceToNextLevel;
+
 
     //attack infos
     LocalDateTime staminaTimer;
@@ -78,6 +82,9 @@ public class OnlinePlayer {
         this.max_stamina=player.max_stamina;
         this.speed = player.speed;
         this.isDead=player.isDead;
+        this.playerLevel=player.playerLevel;
+        this.experience=player.experience;
+        this.experienceToNextLevel=player.experienceToNextLevel;
 
         this.staminaTimer=player.staminaTimer;
         this.attackTimer=player.attackTimer;

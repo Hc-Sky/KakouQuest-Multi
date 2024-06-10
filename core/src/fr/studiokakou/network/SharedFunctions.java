@@ -38,6 +38,7 @@ public class SharedFunctions {
         kryo.register(OnlineChest.class);
         kryo.register(OnlineMonster.class);
         kryo.register(PlayerHitMessage.class);
+        kryo.register(Double.class);
 
     }
 }

@@ -13,6 +13,7 @@ import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
+import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 import fr.studiokakou.kakouquest.weapon.OnlineMeleeWeapon;
@@ -34,6 +35,9 @@ public class Player {
     public float stamina; // The stamina of the player
     public int max_stamina; // The maximum stamina of the player
     public boolean isDead;
+    public int playerLevel;
+    public double experience;
+    public double experienceToNextLevel;
 
 
     //l'arme actuelle
@@ -140,6 +144,9 @@ public class Player {
         this.stamina = OnlinePlayerConstants.defaultStamina;
         this.currentWeapon = StaticsMeleeWeapon.onlineToMeleeWeapon(OnlinePlayerConstants.defaultWeapon);
         this.isDead=false;
+        this.playerLevel = 1;
+        this.experience = 0;
+        this.experienceToNextLevel = 60;
     }
 
     /**
@@ -433,6 +440,7 @@ public class Player {
         this.speed = onlinePlayer.speed;
         this.stamina = onlinePlayer.stamina;
         this.max_stamina = onlinePlayer.max_stamina;
+        this.experience = onlinePlayer.experience;
 
         this.isDead = onlinePlayer.isDead;
         this.hasPlayerSpawn = onlinePlayer.hasPlayerSpawn;
@@ -441,6 +449,23 @@ public class Player {
             System.out.println("changing weapon");
             this.currentWeapon = StaticsMeleeWeapon.onlineToMeleeWeapon(onlinePlayer.currentWeapon);
         }
+    }
+
+    public void checkUpgrade(){
+        if (!UpgradeCardScreen.isUpgrading && this.experience >= this.experienceToNextLevel){
+            this.playerLevel += 1;
+            UpgradeCardScreen.upgrade();
+            double surplus = this.experience - this.experienceToNextLevel;
+            this.experience = 0;
+            this.experienceToNextLevel = this.experienceToNextLevel * 1.4;
+            if (surplus > 0){
+                this.experience = surplus;
+            }
+        }
+    }
+
+    public void gainExperience(double experience){
+        this.experience += experience;
     }
 
 }

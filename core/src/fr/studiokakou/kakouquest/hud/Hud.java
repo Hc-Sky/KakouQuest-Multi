@@ -105,7 +105,7 @@ public class Hud {
 
 
         // texte du niveau actuel
-        //font.draw(batch, "Level : " + player.playerLevel, 100, 90);
+        font.draw(batch, "Level : " + player.playerLevel, 100, 90);
 
 
     }
@@ -115,7 +115,7 @@ public class Hud {
         shapeRenderer.setColor(Color.GRAY);
         shapeRenderer.rect(100, 50, 300, 15);
         shapeRenderer.setColor(Color.GREEN);
-        //shapeRenderer.rect(100F, 50F, (float) (300 * (player.experience / player.experienceToNextLevel)), 15);
+        shapeRenderer.rect(100F, 50F, (float) (300 * (player.experience / player.experienceToNextLevel)), 15);
         shapeRenderer.end();
     }
 

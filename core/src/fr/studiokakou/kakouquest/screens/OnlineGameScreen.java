@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.entity.Monster;
@@ -20,6 +21,7 @@ import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.OnlinePlayer;
 import fr.studiokakou.kakouquest.player.OnlinePlayerConstants;
 import fr.studiokakou.kakouquest.player.Player;
+import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 
@@ -47,6 +49,7 @@ public class OnlineGameScreen implements Screen {
     //batch permettant de dessiner sur l'écran
     SpriteBatch batch;
     SpriteBatch hudBatch;
+    SpriteBatch upgradeBatch;
 
     //hud
     Hud hud;
@@ -71,6 +74,7 @@ public class OnlineGameScreen implements Screen {
         this.game=game;
         this.batch = game.batch;
         this.hudBatch = game.hudBatch;
+        this.upgradeBatch = game.upgradeBatch;
         StaticsMeleeWeapon.createTextureDictionary();
 
         map = new Map(1, 1);
@@ -103,6 +107,8 @@ public class OnlineGameScreen implements Screen {
         font = new BitmapFont();
         hud.setFont(font);
 
+        UpgradeCardScreen.initUpgradeCards();
+
 
         gameClient.client.sendTCP("getMap");
 
@@ -129,8 +135,11 @@ public class OnlineGameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (player.hasPlayerSpawn){
-            player.getKeyboardMove(map);
-            player.getOrientation();
+            if (!UpgradeCardScreen.isUpgrading){
+                player.getKeyboardMove(map);
+                player.getOrientation();
+            }
+
             player.dash(map);
         }
 
@@ -154,9 +163,22 @@ public class OnlineGameScreen implements Screen {
 
         batch.end();
 
-        hudBatch.begin();
-        hud.draw(hudBatch);
-        hudBatch.end();
+        player.checkUpgrade();
+
+        if (!UpgradeCardScreen.isUpgrading){
+            hudBatch.begin();
+            hud.draw(hudBatch);
+            hudBatch.end();
+
+            ShapeRenderer shapeRenderer = new ShapeRenderer();
+            this.hud.drawXpBar(shapeRenderer);
+        }
+
+        if (UpgradeCardScreen.isUpgrading){
+            upgradeBatch.begin();
+            UpgradeCardScreen.draw(upgradeBatch, player);
+            upgradeBatch.end();
+        }
 
 
     }
