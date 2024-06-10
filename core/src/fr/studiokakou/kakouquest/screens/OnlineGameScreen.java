@@ -5,9 +5,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.entity.Monster;
+import fr.studiokakou.kakouquest.hud.Hud;
 import fr.studiokakou.kakouquest.interactive.Chest;
 import fr.studiokakou.kakouquest.interactive.Interactive;
 import fr.studiokakou.kakouquest.map.Map;
@@ -44,6 +47,10 @@ public class OnlineGameScreen implements Screen {
     //batch permettant de dessiner sur l'écran
     SpriteBatch batch;
     SpriteBatch hudBatch;
+
+    //hud
+    Hud hud;
+    BitmapFont font;
 
     //players
     public static Player player;
@@ -90,6 +97,11 @@ public class OnlineGameScreen implements Screen {
 
         Interactive.init();
         Chest.init();
+
+        this.hud = new Hud(this.cam.zoom);
+
+        font = new BitmapFont();
+        hud.setFont(font);
 
 
         gameClient.client.sendTCP("getMap");
@@ -141,6 +153,10 @@ public class OnlineGameScreen implements Screen {
         player.draw(this.batch);
 
         batch.end();
+
+        hudBatch.begin();
+        hud.draw(hudBatch);
+        hudBatch.end();
 
 
     }

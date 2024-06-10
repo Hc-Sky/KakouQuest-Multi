@@ -19,6 +19,7 @@ import fr.studiokakou.kakouquest.weapon.OnlineMeleeWeapon;
 import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class Player {
     public Point pos; // The current position of the player
@@ -131,13 +132,13 @@ public class Player {
         this.lastPos = this.pos;
 
         //default values
-        this.max_hp=100;
-        this.hp=100;
-        this.strength=10;
-        this.speed=40f;
-        this.max_stamina = 100;
-        this.stamina = 100;
-        this.currentWeapon = StaticsMeleeWeapon.onlineToMeleeWeapon(StaticsMeleeWeapon.RUSTY_SWORD());
+        this.max_hp=OnlinePlayerConstants.defaultHp;
+        this.hp=OnlinePlayerConstants.defaultHp;
+        this.strength=OnlinePlayerConstants.defaultStrength;
+        this.speed=OnlinePlayerConstants.defaultSpeed;
+        this.max_stamina = OnlinePlayerConstants.defaultStamina;
+        this.stamina = OnlinePlayerConstants.defaultStamina;
+        this.currentWeapon = StaticsMeleeWeapon.onlineToMeleeWeapon(OnlinePlayerConstants.defaultWeapon);
         this.isDead=false;
     }
 
@@ -309,7 +310,8 @@ public class Player {
 
     public void checkHit(){
         Rectangle meleeWeaponRectangle = this.currentWeapon.sprite.getBoundingRectangle();
-        for (Monster m : Map.monsters){
+        ArrayList<Monster> tmpMonsters = new ArrayList<>(Map.monsters);
+        for (Monster m : tmpMonsters){
             Rectangle mRectangle = m.sprite.getBoundingRectangle();
             if (meleeWeaponRectangle.overlaps(mRectangle)){
                 boolean damaged = m.hit(this);

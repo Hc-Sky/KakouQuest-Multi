@@ -10,6 +10,7 @@ import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.map.Room;
 import fr.studiokakou.kakouquest.player.OnlinePlayer;
+import fr.studiokakou.kakouquest.player.OnlinePlayerConstants;
 import fr.studiokakou.kakouquest.player.PlayerList;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
@@ -86,7 +87,18 @@ public class GameServer implements Listener {
             player.pos = map.getPlayerSpawn();
             player.hasPlayerSpawn = true;
             player.isDead= false;
-            player.hp = player.max_hp;
+
+            player.max_hp= OnlinePlayerConstants.defaultHp;
+            player.hp=OnlinePlayerConstants.defaultHp;
+            player.strength=OnlinePlayerConstants.defaultStrength;
+            player.speed=OnlinePlayerConstants.defaultSpeed;
+            player.max_stamina = OnlinePlayerConstants.defaultStamina;
+            player.stamina = OnlinePlayerConstants.defaultStamina;
+
+            player.isAttacking=false;
+            player.dashStartPoint=null;
+            player.dashOrientation=null;
+            player.canDash=true;
             changePlayerStats(player);
         }
     }
@@ -138,6 +150,10 @@ public class GameServer implements Listener {
             player.pos = map.getPlayerSpawn();
             player.isDead = false;
             player.hp = player.max_hp;
+            player.isAttacking=false;
+            player.dashStartPoint=null;
+            player.dashOrientation=null;
+            player.canDash=true;
             changePlayerStats(player);
         }
     }
@@ -177,7 +193,6 @@ public class GameServer implements Listener {
         if (object instanceof OnlinePlayer){
             OnlinePlayer onlinePlayer = (OnlinePlayer) object;
 
-            System.out.println("Received player : "+ onlinePlayer.isDead);
             onlinePlayers.replace(connection.getID(), onlinePlayer);
 
             if (onlinePlayer.isDead){

@@ -155,7 +155,7 @@ public class OnlineMonster {
         }
 
         if (isDying || isRed || !player.hasPlayerSpawn){
-            this.attack(player);
+            return;
         }
 
         Point playerPos = player.pos;
@@ -166,9 +166,6 @@ public class OnlineMonster {
         }
 
         if (detectPlayer(playerPos)){
-
-//            System.out.println("\nPlayer "+player.username+" is at "+playerPos);
-//            System.out.println("Monster "+this.name+" is at "+this.pos);
 
             this.isRunning = true;
             this.getOrientation(player);

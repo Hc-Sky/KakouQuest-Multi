@@ -37,13 +37,13 @@ public class OnlinePlayer {
     float attackRotation;
 
     //dash infos
-    boolean isDashing = false;
-    boolean canDash = true;
-    Point dashFinalPoint;
-    Point dashStartPoint;
-    Point dashOrientation;
-    LocalDateTime dashTimer;
-    float dashStateTime;
+    public boolean isDashing = false;
+    public boolean canDash = true;
+    public Point dashFinalPoint;
+    public Point dashStartPoint;
+    public Point dashOrientation;
+    public LocalDateTime dashTimer;
+    public float dashStateTime;
 
     //player weapon
     public OnlineMeleeWeapon currentWeapon;

@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
+import fr.studiokakou.kakouquest.weapon.OnlineMeleeWeapon;
+import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 
 
 public class OnlinePlayerConstants {
@@ -19,6 +21,13 @@ public class OnlinePlayerConstants {
     public static Animation<TextureRegion> dashAnimation;
     public static Animation<TextureRegion> spawnAnimation;
     public static Animation<TextureRegion> bloodEffect;
+
+    public static int defaultHp = 100;
+    public static int defaultStamina = 100;
+    public static int defaultStrength = 10;
+    public static float defaultSpeed = 40f;
+    public static OnlineMeleeWeapon defaultWeapon = StaticsMeleeWeapon.RUSTY_SWORD();
+
 
     public static void drawOnlinePlayers(SpriteBatch batch){
         for (OnlinePlayer onlinePlayer : OnlineGameScreen.onlinePlayers){
