@@ -63,11 +63,10 @@ public class OnlineGameScreen implements Screen {
     public static float stateTime=0f;
 
     public OnlineGameScreen(GameSpace game){
-//        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
-//        System.out.print("Enter username : ");
-//
-//        username = myObj.nextLine();
-        username = Utils.randint(1000, 9999)+"";
+        username = UsernameSreen.username;
+
+        ipAdress = Utils.getIpAddress();
+
 
         OnlinePlayerConstants.animationInit();
 

@@ -1,10 +1,12 @@
 package fr.studiokakou.kakouquest;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
+import fr.studiokakou.kakouquest.screens.UsernameSreen;
 
 /**
  * La classe GameSpace représente l'application principale du jeu.
@@ -25,6 +27,8 @@ public class GameSpace extends Game {
 	 */
 	public long startTime;
 
+	public BitmapFont font;
+
 	/**
 	 * Méthode appelée lors de la création de l'application.
 	 */
@@ -39,8 +43,10 @@ public class GameSpace extends Game {
 
 		startTime = TimeUtils.millis();
 
+		this.font = new BitmapFont();
 
-		this.setScreen(new OnlineGameScreen(this));
+
+		this.setScreen(new UsernameSreen(this));
 	}
 
 	/**

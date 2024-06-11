@@ -10,6 +10,10 @@ import com.badlogic.gdx.math.Vector3;
 import fr.studiokakou.kakouquest.constants.Constants;
 import fr.studiokakou.kakouquest.map.Point;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 /**
  * Classe utilitaire.
  * Cette classe contient des méthodes utilitaires pour diverses tâches.
@@ -253,5 +257,30 @@ public class Utils {
      */
     public static int distance(Point pos, Point playerPos) {
         return (int) Math.sqrt(Math.pow(playerPos.x - pos.x, 2) + Math.pow(playerPos.y - pos.y, 2));
+    }
+
+
+    public static String getIpAddress(){
+        String filePath = "server_address.txt"; // Chemin du fichier à la racine du projet
+        BufferedReader reader = null;
+        String firstLine = null;
+
+        try {
+            reader = new BufferedReader(new FileReader(filePath));
+            firstLine = reader.readLine(); // Lire la première ligne du fichier
+            System.out.println("Première ligne du fichier : " + firstLine);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close(); // Fermer le BufferedReader pour libérer les ressources
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return firstLine;
     }
 }
