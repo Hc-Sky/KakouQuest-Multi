@@ -61,6 +61,10 @@ public class MeleeWeapon {
         this.sprite.flip(true, false);
     }
 
+    /**
+     * Constructs a MeleeWeapon with the given OnlineMeleeWeapon.
+     * @param onlineMeleeWeapon The OnlineMeleeWeapon to construct the MeleeWeapon from.
+     */
     public MeleeWeapon(OnlineMeleeWeapon onlineMeleeWeapon) {
         if (onlineMeleeWeapon == null){
             return;

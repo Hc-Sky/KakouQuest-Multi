@@ -8,6 +8,8 @@ import java.util.Hashtable;
 
 public class StaticsMeleeWeapon {
 
+    // initialise the possible melee weapons with their rarity and stats
+
     public static OnlineMeleeWeapon meleeWeaponToOnline(MeleeWeapon meleeWeapon){
         if (meleeWeapon==null){
             return null ;

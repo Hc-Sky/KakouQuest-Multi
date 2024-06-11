@@ -8,6 +8,10 @@ import fr.studiokakou.kakouquest.utils.Utils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+/**
+ * The player upgrade screen that allows the player to upgrade their stats.
+ * It show 3 upgrade cards chosed randomly from a list of possible cards.
+ */
 public class UpgradeCardScreen {
 
     public static boolean isUpgrading = false;
@@ -15,6 +19,9 @@ public class UpgradeCardScreen {
     static ArrayList<UpgradeCard> possibleCards = new ArrayList<>();
     public static LocalDateTime appearTime;
 
+    /**
+     * Choose 3 random upgrade cards from the list of possible cards.
+     */
     public static void upgrade() {
         upgradeCards.clear();
 
@@ -29,6 +36,12 @@ public class UpgradeCardScreen {
         appearTime = LocalDateTime.now();
     }
 
+    /**
+     * Draw the upgrade cards on the screen.
+     *
+     * @param batch  The SpriteBatch used for drawing.
+     * @param player The player to apply the upgrade to.
+     */
     public static void draw(SpriteBatch batch, Player player) {
         if (isUpgrading) {
 
@@ -38,6 +51,9 @@ public class UpgradeCardScreen {
         }
     }
 
+    /**
+     * Initialize the list of possible upgrade cards.
+     */
     public static void initUpgradeCards() {
         possibleCards.add(new UpgradeCard(new Texture("assets/upgrade_cards/health_card.png"), "hp", 10));
         possibleCards.add(new UpgradeCard(new Texture("assets/upgrade_cards/speed_card.png"), "speed", 4));

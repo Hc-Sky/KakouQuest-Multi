@@ -1,13 +1,10 @@
 package fr.studiokakou.kakouquest.entity;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.map.Point;
-import fr.studiokakou.kakouquest.player.OnlinePlayer;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
@@ -18,54 +15,50 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 public class Monster {
+
+    //monster stats
     public String name;
+    public int id;
     public Point pos;
     public float speed;
     public int damage;
     public float attackPause;
     public int xp;
-
-    LocalDateTime currentAttackTime;
-    /** The hit points of the monster. */
     public int hp;
-    /** The range in which the monster can detect the player. */
     public int detectRange;
-    /** The height of the monster. */
+
+    // animiation vars
+    public static int FRAME_COLS = 1;
+    public static int FRAME_ROWS = 4;
     float height;
-    /** The width of the monster. */
     float width;
-    /** The animation for idle state. */
     Animation<TextureRegion> idleAnimation;
-    /** The animation for running state. */
     Animation<TextureRegion> runAnimation;
     boolean isRunning;
     boolean isFlip;
     public Sprite sprite;
+    public static Dictionary<String, Animation<TextureRegion>> monsterTextures = new Hashtable<>();
 
+    // manage death
     public boolean isDying;
     public boolean isDead;
 
-    /** Number of columns in the animation sprite sheet. */
-    public static int FRAME_COLS = 1;
-    /** Number of rows in the animation sprite sheet. */
-    public static int FRAME_ROWS = 4;
+    // attack vars
+    LocalDateTime currentAttackTime;
+    ArrayList<String> player_hitted = new ArrayList<>();
 
-    //hit vars
+    // player hit vars
     public boolean isRed;
     public LocalDateTime hitStart;
     Animation<TextureRegion> bloodEffect;
     float bloodStateTime=0f;
 
-    public static Dictionary<String, Animation<TextureRegion>> monsterTextures = new Hashtable<>();
-
+    // animation paths
     public String idleAnimationPath;
     public String runAnimationPath;
 
-    ArrayList<String> player_hitted = new ArrayList<>();
 
-    public int id;
-
-
+    // Monster constructor from a OnlineMonster object
     public Monster(OnlineMonster monster){
         this.name = monster.name;
         this.speed = monster.speed;
@@ -105,20 +98,22 @@ public class Monster {
 
     }
 
+    // when a player hit this monster
     public boolean hit(Player player){
         if (!this.player_hitted.contains(OnlineGameScreen.username)){
             System.out.println("hit : "+this.id +" by "+OnlineGameScreen.username);
             this.takeDamage(player);
             this.bloodStateTime=0f;
             this.isRed=true;
-            this.player_hitted.add(OnlineGameScreen.username);
+            this.player_hitted.add(OnlineGameScreen.username);   //save it so the player can't hit the monster again in the same attack
             this.hitStart=LocalDateTime.now();
-            OnlineGameScreen.gameClient.client.sendTCP(new OnlineMonster(this));
+            OnlineGameScreen.gameClient.client.sendTCP(new OnlineMonster(this));    //send the monster to the server
             return true;
         }
         return false;
     }
 
+    // update the monster hp when he gets hit
     public void takeDamage(Player player){
         this.hp -= player.currentWeapon.damage*(player.strength/10);
         if (this.hp <= 0){
@@ -127,10 +122,7 @@ public class Monster {
         }
     }
 
-    public void place(Point pos){
-        this.pos = pos;
-    }
-
+    // manage the monster attack on the player
     public void attack(Player player){
         if (this.isDying || !player.hasPlayerSpawn){
             return;
@@ -141,12 +133,8 @@ public class Monster {
         }
     }
 
-    public void checkAttack(Player player){
-        if (Utils.distance(player.pos, this.pos)<=15){
-            this.attack(player);
-        }
-    }
 
+    // show the monster on screen
     public void draw(SpriteBatch batch){
         if (this.pos == null){
             return;
@@ -175,10 +163,12 @@ public class Monster {
 
     }
 
+    // get the center pos of the monster
     public Point center(){
         return new Point(this.pos.x+ this.width /2,this.pos.y+ this.height /4);
     }
 
+    // initialise the monster textures
     public static void init(){
         monsterTextures.put("assets/entities/big_demon_idle.png", Utils.getAnimation("assets/entities/big_demon_idle.png", FRAME_COLS, FRAME_ROWS));
         monsterTextures.put("assets/entities/big_demon_run.png", Utils.getAnimation("assets/entities/big_demon_run.png", FRAME_COLS, FRAME_ROWS));

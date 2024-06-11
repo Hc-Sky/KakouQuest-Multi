@@ -2,7 +2,6 @@ package fr.studiokakou.kakouquest.hud;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,51 +11,26 @@ import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
- * Le type Hud. Cette classe est utilisée pour créer un objet Hud.
- *
- * @version 1.0
- *
+ * This class represents the HUD (Heads-Up Display) of the game.
+ * It is responsible for displaying the player's health, stamina, and level.
  */
 public class Hud {
-    /**
-     * The Player.
-     */
     Player player;
-
-    /**
-     * The Health bar.
-     */
     ArrayList<Texture> healthBar = new ArrayList<>();
-    /**
-     * The Health bar outside.
-     */
     Texture healthBarOutside;
-
-    /**
-     * The Stamina bar.
-     */
     ArrayList<Texture> staminaBar = new ArrayList<>();
-
-    /**
-     * The Hud size.
-     */
     float hudSize;
 
     BitmapFont font;
 
-    /**
-     * The SnapeRenderer
-     */
     private ShapeRenderer shapeRenderer;
 
     /**
-     * Constructeur de l'HUD.
-     * Sert à créer un objet Hud.
-     *
-     * @param hudSizeMult  the hud size mult
+     * Constructor for the Hud class.
+     * Initializes the player, shapeRenderer, hudSize, and textures for the health and stamina bars.
+     * @param hudSizeMult Multiplier for the size of the HUD.
      */
     public Hud(float hudSizeMult){
         this.player = OnlineGameScreen.player;
@@ -76,9 +50,8 @@ public class Hud {
     }
 
     /**
-     * Dessine l'HUD.
-     *
-     * @param batch the batch
+     * Draws the HUD on the screen.
+     * @param batch The SpriteBatch used for drawing.
      */
     public void draw(SpriteBatch batch){
         if (this.player == null) {
@@ -102,14 +75,15 @@ public class Hud {
 
         batch.draw(this.staminaBar.get(getStaminaAmount()), staminaBarPos.x, staminaBarPos.y, this.staminaBar.get(0).getWidth()*this.hudSize, this.staminaBar.get(0).getHeight()*this.hudSize);
 
-
-
         // texte du niveau actuel
         font.draw(batch, "Level : " + player.playerLevel, 100, 90);
-
-
     }
 
+    /**
+     * Draws the XP bar on the screen.
+     * In LibGdx the ShapeRenderer is used appart from the batch because it causes conflicts with the font utilisation.
+     * @param shapeRenderer The ShapeRenderer used for drawing.
+     */
     public void drawXpBar(ShapeRenderer shapeRenderer){
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.GRAY);
@@ -119,10 +93,18 @@ public class Hud {
         shapeRenderer.end();
     }
 
+    /**
+     * Sets the font for the HUD.
+     * @param font The BitmapFont to be used.
+     */
     public void setFont(BitmapFont font) {
         this.font = font;
     }
 
+    /**
+     * Calculates the amount of stamina to be displayed on the HUD.
+     * @return The amount of stamina to be displayed.
+     */
     private int getStaminaAmount() {
         int staminaAmount;
         if ((this.player.stamina*100)/this.player.max_stamina >= 98) {
@@ -141,6 +123,10 @@ public class Hud {
         return staminaAmount;
     }
 
+    /**
+     * Calculates the amount of health to be displayed on the HUD.
+     * @return The amount of health to be displayed.
+     */
     private int getHealthAmount() {
         int healthAmount;
         if ((this.player.hp*100)/this.player.max_hp >= 98) {

@@ -2,16 +2,24 @@ package fr.studiokakou.network;
 
 import fr.studiokakou.kakouquest.entity.OnlineMonster;
 
-import java.util.ArrayList;
-
+/**
+ * La classe MonsterManager est un thread qui gère les monstres du serveur.
+ */
 public class MonsterManager implements Runnable {
 
     GameServer gameServer;
 
+    /**
+     * Constructeur de la classe MonsterManager.
+     * @param gameServer Le serveur de jeu.
+     */
     public MonsterManager(GameServer gameServer){
         this.gameServer = gameServer;
     }
 
+    /**
+     * Méthode appelée lors du démarrage du thread.
+     */
     @Override
     public void run() {
         long lastTime = System.nanoTime();

@@ -6,12 +6,22 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.player.Player;
 
+/**
+ * Represents an upgrade card that can be applied to a player.
+ */
 public class UpgradeCard {
     Texture texture;
     Sprite sprite;
     String upgradeName;
     int upgradeAmount;
 
+    /**
+     * Constructor for creating an UpgradeCard object.
+     *
+     * @param texture      The texture of the upgrade card.
+     * @param upgradeName  The name of the upgrade (e.g., "hp", "stamina", "speed", "strength").
+     * @param upgradeAmount The amount by which the upgrade affects the player's stats.
+     */
     public UpgradeCard(Texture texture, String upgradeName, int upgradeAmount) {
         this.texture = texture;
         this.sprite = new Sprite(texture);
@@ -19,6 +29,11 @@ public class UpgradeCard {
         this.upgradeAmount = upgradeAmount;
     }
 
+    /**
+     * Applies the upgrade effect to the player.
+     *
+     * @param player The player to apply the upgrade to.
+     */
     public void clicked(Player player) {
         switch (upgradeName) {
             case "hp":
@@ -38,6 +53,13 @@ public class UpgradeCard {
         }
     }
 
+    /**
+     * Draws the upgrade card on the screen.
+     *
+     * @param batch The SpriteBatch used for drawing.
+     * @param pos   The position of the upgrade card on the screen.
+     * @param player The player object to apply the upgrade to.
+     */
     public void draw(SpriteBatch batch, int pos, Player player) {
         this.sprite.setX(((float) Gdx.graphics.getWidth() / 3)-((float) this.texture.getWidth() /2) + (pos*texture.getWidth()));
         this.sprite.setY(((float) Gdx.graphics.getHeight() / 2) - ((float) this.texture.getHeight() /2));

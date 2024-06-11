@@ -22,9 +22,13 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.*;
 
+/**
+ * La classe GameServer représente le serveur du jeu.
+ */
 public class GameServer implements Listener {
     public static Server server;
 
+    // paramètres du serveur
     public int PORT;
     public int udp;
     public int maxPlayer;
@@ -42,9 +46,13 @@ public class GameServer implements Listener {
     //tableau des joueurs (id, onlinePlayer)
     public static Map<Integer, OnlinePlayer> onlinePlayers = new HashMap<>();
 
+    /**
+     * Constructeur de la classe GameServer.
+     */
     public GameServer(){
         server = new Server((int)2e6, (int)5e5);
 
+        // récupération des paramètres du serveur de puis le fichier server_config.properties
         this.PORT = GetConfig.getIntProperty("PORT");
         this.udp = GetConfig.getIntProperty("UDP_PORT");
         this.maxPlayer = GetConfig.getIntProperty("MAX_PLAYER");
@@ -71,6 +79,9 @@ public class GameServer implements Listener {
 
     }
 
+    /**
+     * Méthode appelée lorsque tous les joueurs sont morts pour recommencer au niveau 1.
+     */
     public void restart(){
         System.out.println("Creating map...");
 
@@ -88,11 +99,7 @@ public class GameServer implements Listener {
             player.hasPlayerSpawn = true;
             player.isDead= false;
 
-            player.max_hp= OnlinePlayerConstants.defaultHp;
-            player.hp=OnlinePlayerConstants.defaultHp;
-            player.strength=OnlinePlayerConstants.defaultStrength;
-            player.speed=OnlinePlayerConstants.defaultSpeed;
-            player.max_stamina = OnlinePlayerConstants.defaultStamina;
+            player.hp=player.max_hp;
             player.stamina = OnlinePlayerConstants.defaultStamina;
 
             player.isAttacking=false;
@@ -103,6 +110,9 @@ public class GameServer implements Listener {
         }
     }
 
+    /**
+     * Méthode appelée pour générer les monstres à chaque nouveau niveau.
+     */
     public void genMonsters(){
         monsters.clear();
         ArrayList<Integer> randomRarity = new ArrayList<>();
@@ -137,6 +147,9 @@ public class GameServer implements Listener {
         }
     }
 
+    /**
+     * Méthode appelée pour passer au niveau suivant.
+     */
     public void nextLevel(){
         currentLevel++;
         this.map = new ServerMap(80, 80);
@@ -158,6 +171,11 @@ public class GameServer implements Listener {
         }
     }
 
+    /**
+     * Méthode appelée pour démarrer le serveur.
+     *
+     * @throws IOException
+     */
     public void startServer() throws IOException {
         SharedFunctions.getSharedRegister(server.getKryo());
 
@@ -171,6 +189,12 @@ public class GameServer implements Listener {
         monsterThread.start();
     }
 
+    /**
+     * Méthode appelée lors de la réception d'un message.
+     *
+     * @param connection Connexion
+     * @param object     Objet reçu
+     */
     public void received(Connection connection, Object object) {
         if (object instanceof ConnectMessage){
             connection.setKeepAliveTCP(8000);
@@ -262,10 +286,18 @@ public class GameServer implements Listener {
         }
     }
 
+    /**
+     * Méthode appelée lors de la connexion d'un joueur.
+     *
+     * @param connection Connexion
+     */
     public void disconnected(Connection connection) {
         onlinePlayers.remove(connection.getID());
     }
 
+    /**
+     * Méthode appelée pour envoyer les joueurs à tous les joueurs.
+     */
     public void sendPlayersToAll(){
         PlayerList playerList = new PlayerList();
 
@@ -276,15 +308,26 @@ public class GameServer implements Listener {
         });
     }
 
+    /**
+     * Méthode appelée pour envoyer la map à tous les joueurs.
+     */
     public void sendMapToAll(){
         server.sendToAllTCP(map);
         server.sendToAllTCP(stairs);
     }
 
+    /**
+     * Méthode appelée pour envoyer les monstres à tous les joueurs.
+     */
     public void sendMonstersToAll(){
         server.sendToAllTCP(monsters);
     }
 
+    /**
+     * Méthode appelée pour envoyer les statistiques du joueur.
+     *
+     * @param player Joueur
+     */
     public void changePlayerStats(OnlinePlayer player){
         System.out.println("Sending stat changes");
         server.sendToTCP(getIdWithUsername(player.username), new ChangePlayerStatsMessage(player));
@@ -292,6 +335,12 @@ public class GameServer implements Listener {
 
 
     static int researchInt;
+
+    /**
+     * Méthode appelée pour obtenir l'ID du joueur avec son nom d'utilisateur.
+     * @param username
+     * @return
+     */
     public static int getIdWithUsername(String username){
         onlinePlayers.forEach((integer, onlinePlayer) -> {
             if(Objects.equals(onlinePlayer.username, username)){

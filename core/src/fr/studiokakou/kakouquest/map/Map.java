@@ -8,9 +8,7 @@ import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.interactive.Chest;
 import fr.studiokakou.kakouquest.interactive.Interactive;
 import fr.studiokakou.kakouquest.interactive.Stairs;
-import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
-import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.network.ServerMap;
 
 import java.util.ArrayList;
@@ -19,25 +17,18 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 /**
- * The Map class represents a game map.
- * This class is used to create a Map object.
- *
- * @version 1.0
+ * The Map class represents a game map and provides methods for managing and drawing the map.
  */
 public class Map {
-    /**
-     * The floors of the map. It is a list of floors.
-     */
     public ArrayList<Floor> floors = new ArrayList<>();
 
+    // map dimensions
     public int map_height;
-    /**
-     * The width of the map.
-     */
     public int map_width;
-    /**
-     * The list of rooms.
-     */
+    public static int ROOM_MIN_HEIGHT = 7;
+    public static int ROOM_MIN_WIDTH = 7;
+    public static int ROOM_MAX_HEIGHT = 21;
+    public static int ROOM_MAX_WIDTH = 21;
 
     public Stairs stairs;
 
@@ -45,37 +36,11 @@ public class Map {
 
     public ArrayList<Interactive> interactives = new ArrayList<>();
 
-    ArrayList<Room> rooms =  new ArrayList<>();
-    /**
-     * The list of bridges.
-     */
+    ArrayList<Room> rooms = new ArrayList<>();
     ArrayList<Bridge> bridges = new ArrayList<>();
-    /**
-     * The list of walls.
-     */
     ArrayList<Wall> walls = new ArrayList<>();
-    /**
-     * The minimum height of a room.
-     */
-    public static int ROOM_MIN_HEIGHT=7;
-    /**
-     * The minimum width of a room.
-     */
-    public static int ROOM_MIN_WIDTH=7;
-    /**
-     * The maximum height of a room.
-     */
-    public static int ROOM_MAX_HEIGHT=21;
-    /**
-     * The maximum width of a room.
-     */
-    public static int ROOM_MAX_WIDTH=21;
-    /**
-     * A hash table storing distances.
-     */
-    public Hashtable<Float, Object> distances = new Hashtable<>();
 
-
+    // map textures
     public static Texture[] FLOOR_TEXTURES;
     public static HashMap<String, Texture> WALL_TEXTURES;
     public static Texture STAIRS_TEXTURE;
@@ -86,19 +51,29 @@ public class Map {
 
     public static ArrayList<Monster> monsters = new ArrayList<>();
 
-
     /**
-     * Constructs a Map object.
-     * This constructor is used to create a Map object.
+     * Constructs a Map object with the specified dimensions.
      *
      * @param width  the width of the map
      * @param height the height of the map
      */
-    public Map(int width, int height){
+    public Map(int width, int height) {
         this.map_height = height;
         this.map_width = width;
 
-        FLOOR_TEXTURES = new Texture[]{new Texture("assets/map/floor_1.png"), new Texture("assets/map/floor_2.png"), new Texture("assets/map/floor_3.png"), new Texture("assets/map/floor_4.png"), new Texture("assets/map/floor_5.png"), new Texture("assets/map/floor_6.png"), new Texture("assets/map/floor_7.png"), new Texture("assets/map/floor_8.png")};
+        // load floors textures
+        FLOOR_TEXTURES = new Texture[]{
+                new Texture("assets/map/floor_1.png"),
+                new Texture("assets/map/floor_2.png"),
+                new Texture("assets/map/floor_3.png"),
+                new Texture("assets/map/floor_4.png"),
+                new Texture("assets/map/floor_5.png"),
+                new Texture("assets/map/floor_6.png"),
+                new Texture("assets/map/floor_7.png"),
+                new Texture("assets/map/floor_8.png")
+        };
+
+        // load walls textures
         WALL_TEXTURES = new HashMap<>();
         WALL_TEXTURES.put("assets/map/wall_outer_front_left.png", new Texture("assets/map/wall_outer_front_left.png"));
         WALL_TEXTURES.put("assets/map/wall_mid.png", new Texture("assets/map/wall_mid.png"));
@@ -111,11 +86,16 @@ public class Map {
         WALL_TEXTURES.put("assets/map/wall_outer_mid_right.png", new Texture("assets/map/wall_outer_mid_right.png"));
         WALL_TEXTURES.put("assets/map/wall_outer_mid_left.png", new Texture("assets/map/wall_outer_mid_left.png"));
 
+        //load stairs texture
         STAIRS_TEXTURE = new Texture("assets/map/floor_ladder.png");
     }
 
-    public Map(ServerMap onlineMap){
-
+    /**
+     * Constructs a Map object from a ServerMap object.
+     *
+     * @param onlineMap the ServerMap object
+     */
+    public Map(ServerMap onlineMap) {
         this.floors.clear();
         this.walls.clear();
         chests.clear();
@@ -125,7 +105,6 @@ public class Map {
 
         this.rooms = onlineMap.rooms;
         this.bridges = onlineMap.bridges;
-
 
         for (int i = 0; i < onlineMap.floors.size(); i++) {
             this.floors.add(new Floor(onlineMap.floors.get(i)));
@@ -142,18 +121,22 @@ public class Map {
         }
     }
 
-    public void refreshInteract(){
+    /**
+     * Refreshes the interactables in the map.
+     */
+    public void refreshInteract() {
+        // gets the closest object from the player to show the interact key
         Interactive closest = interactives.get(0);
         float minDistance = closest.getDistance(OnlineGameScreen.player);
-        for (Interactive interactive : this.interactives){
+        for (Interactive interactive : this.interactives) {
             float distance = interactive.getDistance(OnlineGameScreen.player);
-            if (distance < minDistance){
+            if (distance < minDistance) {
                 minDistance = distance;
                 closest = interactive;
             }
         }
 
-        for (Interactive interactive : this.interactives){
+        for (Interactive interactive : this.interactives) {
             interactive.refreshInteract(OnlineGameScreen.player, interactive == closest);
         }
     }
@@ -161,33 +144,34 @@ public class Map {
     /**
      * Draws the map.
      *
-     * @param batch the sprite batch
+     * @param batch the sprite batch used for drawing
      */
-    public void drawMap(SpriteBatch batch){
-        for (Floor f : this.floors){
+    public void drawMap(SpriteBatch batch) {
+        for (Floor f : this.floors) {
             batch.draw(FLOOR_TEXTURES[f.textureIndex], f.pos.x, f.pos.y);
         }
 
-        for (Wall w : this.walls){
-            batch.draw(WALL_TEXTURES.get(w.assetPath), w.pos.x*16, w.pos.y*16);
+        for (Wall w : this.walls) {
+            batch.draw(WALL_TEXTURES.get(w.assetPath), w.pos.x * 16, w.pos.y * 16);
         }
 
-        if (this.stairs != null){
+        if (this.stairs != null) {
             this.stairs.draw(STAIRS_TEXTURE, batch);
         }
 
-        for (Chest chest : chests){
+        for (Chest chest : chests) {
             chest.draw(batch);
         }
 
-        this.drawingMonsters=true;
+        // don't draw monsters while editiing the monsters list
+        this.drawingMonsters = true;
         ArrayList<Monster> monsterstmp = new ArrayList<>(Map.monsters);
         int size = monsterstmp.size();
         for (int i = 0; i < size; i++) {
             Monster monster = monsterstmp.get(i);
             monster.draw(batch);
         }
-        this.drawingMonsters=false;
+        this.drawingMonsters = false;
     }
 
     /**
@@ -195,18 +179,17 @@ public class Map {
      *
      * @return the spawn point
      */
-    public Point getPlayerSpawn(){
+    public Point getPlayerSpawn() {
         return this.rooms.get(0).getCenterOutOfMap();
     }
 
-
     /**
-     * Checks if points are on floor.
+     * Checks if points are on the floor.
      *
      * @param points the points to check
-     * @return true if all points are on floor, false otherwise
+     * @return true if all points are on the floor, false otherwise
      */
-    public boolean arePointsOnFloor(Point[] points){
+    public boolean arePointsOnFloor(Point[] points) {
         boolean[] areIn = new boolean[points.length];
         Arrays.fill(areIn, false);
 
@@ -216,13 +199,13 @@ public class Map {
                 Point p1 = floor.pos;
                 Point p2 = floor.pos.add(Floor.TEXTURE_WIDTH, Floor.TEXTURE_HEIGHT);
                 if (point.isPointIn(p1, p2)) {
-                    areIn[i]=true;
+                    areIn[i] = true;
                 }
             }
         }
 
-        for (boolean isIn : areIn){
-            if (!isIn){
+        for (boolean isIn : areIn) {
+            if (!isIn) {
                 return false;
             }
         }

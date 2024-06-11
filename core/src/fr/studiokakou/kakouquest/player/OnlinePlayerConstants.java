@@ -15,6 +15,7 @@ public class OnlinePlayerConstants {
     // le nombre de lignes de l'animation
     static final int FRAME_ROWS = 4;
 
+    // the different animations of the player
     public static Animation<TextureRegion> idleAnimation;
     public static Animation<TextureRegion> runAnimation;
     public static Animation<TextureRegion> runAnimationRevert;
@@ -22,6 +23,7 @@ public class OnlinePlayerConstants {
     public static Animation<TextureRegion> spawnAnimation;
     public static Animation<TextureRegion> bloodEffect;
 
+    // the default stats of the player
     public static int defaultHp = 100;
     public static int defaultStamina = 100;
     public static int defaultStrength = 10;
@@ -29,6 +31,10 @@ public class OnlinePlayerConstants {
     public static OnlineMeleeWeapon defaultWeapon = StaticsMeleeWeapon.RUSTY_SWORD();
 
 
+    /**
+     * Draw the online players on the main player map
+     * @param batch
+     */
     public static void drawOnlinePlayers(SpriteBatch batch){
         for (OnlinePlayer onlinePlayer : OnlineGameScreen.onlinePlayers){
             if (onlinePlayer.hasPlayerSpawn && !onlinePlayer.isDead){
@@ -37,6 +43,9 @@ public class OnlinePlayerConstants {
         }
     }
 
+    /**
+     * Initialize the animations of the player
+     */
     public static void animationInit(){
         idleAnimation = Utils.getAnimation("assets/player/knight_1_idle.png", FRAME_COLS, FRAME_ROWS);
         runAnimation = Utils.getAnimation("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
@@ -46,6 +55,10 @@ public class OnlinePlayerConstants {
         bloodEffect = Utils.getAnimation("assets/effects/blood.png", 6, 4, 0.02f);
     }
 
+    /**
+     * Convert a main player to an online player
+     * @param player
+     */
     public static OnlinePlayer mainToOnlinePlayer(Player player){
         return new OnlinePlayer(player);
     }

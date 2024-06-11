@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.GameSpace;
 
-
+/**
+ * La classe UsernameSreen représente l'écran de saisie du nom d'utilisateur.
+ */
 public class UsernameSreen implements Screen {
 
     public static String username = "guest";

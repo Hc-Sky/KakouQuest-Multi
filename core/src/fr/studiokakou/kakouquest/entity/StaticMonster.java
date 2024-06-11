@@ -6,6 +6,9 @@ import java.util.Hashtable;
 
 public class StaticMonster {
 
+    // this is used to pregenerate and store the different monsters that can be encountered in the game based on the current level
+    // they are stored by rarity so the depper you go the more rare monsters you will encounter
+
     public static Dictionary<Integer, ArrayList<OnlineMonster>> possibleMonsters = new Hashtable<>();
 
     public static void createPossibleMonsters(int currentLevel){

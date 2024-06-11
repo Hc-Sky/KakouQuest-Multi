@@ -4,7 +4,6 @@ package fr.studiokakou.kakouquest.map;
  * Represents a wall object in the game map.
  */
 public class Wall {
-    /** The position of the wall on the map. */
     Point pos;
 
     public String assetPath;

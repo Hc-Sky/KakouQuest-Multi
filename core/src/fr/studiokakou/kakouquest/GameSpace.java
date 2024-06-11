@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
-import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 import fr.studiokakou.kakouquest.screens.UsernameSreen;
 
 /**

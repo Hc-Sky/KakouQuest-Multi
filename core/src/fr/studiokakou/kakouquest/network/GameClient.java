@@ -23,7 +23,14 @@ import fr.studiokakou.network.message.PlayerHitMessage;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * The GameClient class represents a client for the game's network communication.
+ * It connects to the server and handles incoming and outgoing messages.
+ */
 public class GameClient implements Listener {
+    /**
+     * The KryoNet client used for network communication.
+     */
     public Client client;
 
     String ipAdress;
@@ -33,13 +40,21 @@ public class GameClient implements Listener {
 
     Player player;
 
-    public static boolean isConnected = false;
 
+    public static boolean isConnected = false;
     Thread sendingThread;
 
-    public GameClient(String ipAdress, int tcp_port, int udp_port, Player player){
+    /**
+     * Constructs a GameClient object with the specified server IP address, TCP port, UDP port, and player.
+     *
+     * @param ipAdress the IP address of the server
+     * @param tcp_port the TCP port of the server
+     * @param udp_port the UDP port of the server
+     * @param player   the local player object
+     */
+    public GameClient(String ipAdress, int tcp_port, int udp_port, Player player) {
         this.player = player;
-        this.client = new Client((int)2e6, (int)5e5);
+        this.client = new Client((int) 2e6, (int) 5e5);
 
         SharedFunctions.getSharedRegister(client.getKryo());
 
@@ -48,6 +63,9 @@ public class GameClient implements Listener {
         this.udp = udp_port;
     }
 
+    /**
+     * Starts the client and establishes a connection to the server.
+     */
     public void startClient() {
         client.start();
 
@@ -58,15 +76,19 @@ public class GameClient implements Listener {
         }
 
         client.addListener(this);
-
     }
 
-    public void startSendingThread(){
+    /**
+     * Starts the sending thread for continuously sending player updates to the server.
+     */
+    public void startSendingThread() {
         this.sendingThread = new Thread(() -> {
-            while (isConnected){
+            while (isConnected) {
                 try {
-                    client.sendTCP(OnlinePlayerConstants.mainToOnlinePlayer(player));
-                } catch (Exception e){
+                    if (player != null && player.pos != null){
+                        client.sendTCP(OnlinePlayerConstants.mainToOnlinePlayer(player));
+                    }
+                } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
                 try {
@@ -80,6 +102,7 @@ public class GameClient implements Listener {
         sendingThread.start();
     }
 
+    // Listener methods
 
     public void connected(Connection connection) {
         isConnected = true;
@@ -93,6 +116,13 @@ public class GameClient implements Listener {
         System.exit(0);
     }
 
+    /**
+     * Handles incoming messages from the server.
+     * Uses instanceof to determine the type of the message and processes it accordingly.
+     *
+     * @param connection
+     * @param object
+     */
     public void received(Connection connection, Object object) {
         if (object instanceof IdMessage){
             IdMessage message = (IdMessage) object;
@@ -170,6 +200,11 @@ public class GameClient implements Listener {
         }
     }
 
+    /**
+     * Sends the local player object to the server.
+     *
+     * @param player the local player object
+     */
     public void sendPlayer(Player player){
         try {
             client.sendTCP(OnlinePlayerConstants.mainToOnlinePlayer(player));

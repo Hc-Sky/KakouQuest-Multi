@@ -16,24 +16,23 @@ import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
-import fr.studiokakou.kakouquest.weapon.OnlineMeleeWeapon;
 import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Player {
-    public Point pos; // The current position of the player
-    Point lastPos; // The last position of the player
+    public Point pos;
+    Point lastPos;
 
 
     // Player stats
-    public int hp; // The health points of the player
-    public int max_hp; // The maximum health points of the player
-    public int strength; // The strength of the player
-    public float speed; // The speed of the player
-    public float stamina; // The stamina of the player
-    public int max_stamina; // The maximum stamina of the player
+    public int hp;
+    public int max_hp;
+    public int strength;
+    public float speed;
+    public float stamina;
+    public int max_stamina;
     public boolean isDead;
     public int playerLevel;
     public double experience;
@@ -55,29 +54,14 @@ public class Player {
 
     //dash stats
     static float DASH_DISTANCE = 50f;
-    /**
-     * la vitesse du dash.
-     */
     static float DASH_SPEED = 500f;
-    /**
-     * la pause entre les dashs.
-     */
-    static long DASH_PAUSE = 3;   //en secondes
-    /**
-     * la stamina utilisée pour dash.
-     */
+    static long DASH_PAUSE = 3;
     static int DASH_STAMINA_USAGE = 10;
 
 
     //attack vars
     public static float PLAYER_MELEE_WEAPON_DISTANCE=10f;
-    /**
-     * la pause entre les attaques.
-     */
-    public static float ATTACK_PAUSE = 200f; //en millisecondes
-    /**
-     * la stamina utilisée pour attaquer.
-     */
+    public static float ATTACK_PAUSE = 200f;
     static int ATTACK_STAMINA_USAGE = 2;
     LocalDateTime staminaTimer;
     LocalDateTime attackTimer;
@@ -157,6 +141,12 @@ public class Player {
         this.pos = pos;
     }
 
+    /**
+     * Permet de faire spawn le joueur.
+     * @param x
+     * @param y
+     * @param map
+     */
     public void move(float x, float y, Map map){
 
         if (canMove(this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed), map)){
@@ -165,6 +155,11 @@ public class Player {
         }
     }
 
+    /**
+     * Initiates a dash action for the player.
+     *
+     * @param map The map on which the player is dashing.
+     */
     public void dash(Map map){    //used for the dash animation
         if (this.isDashing){
             if (this.dashFinalPoint == null && this.dashOrientation==null){
@@ -219,7 +214,11 @@ public class Player {
 
     }
 
-
+    /**
+     * Verifies if the next player pos is on a floor.
+     * @param newPos
+     * @param map
+     */
     public boolean canMove(Point newPos, Map map){
         Point hitboxTopLeft = newPos.add(3, this.texture_height-5 - Floor.TEXTURE_HEIGHT);
         Point hitboxBottomLeft = newPos.add(3, 0);
@@ -254,7 +253,7 @@ public class Player {
 
 
     /**
-     * Permet de faire attaquer le joueur.
+     * Starts the player attack
      */
     public void attack() {
         if (currentWeapon==null){
@@ -276,7 +275,7 @@ public class Player {
 
 
     /**
-     * Permet d'afficher l'attaque du joueur.
+     * Draws the player attack.
      *
      * @param batch the batch
      */
@@ -308,13 +307,16 @@ public class Player {
 
     /**
      *
-     * Permet de récupérer l'orientation du joueur.
+     * Gets the player orientation based on the mouse position (where he is aiming).
      */
     public void getOrientation(){
         Point mousePos = Utils.mousePosUnproject(Camera.camera);
         this.flip= mousePos.x < this.center().x;
     }
 
+    /**
+     * Verify if the player sword hits a monster.(Only called during showAttack)
+     */
     public void checkHit(){
         Rectangle meleeWeaponRectangle = this.currentWeapon.sprite.getBoundingRectangle();
         ArrayList<Monster> tmpMonsters = new ArrayList<>(Map.monsters);
@@ -335,7 +337,7 @@ public class Player {
 
 
     /**
-     * Permet de récupérer les mouvements du clavier.
+     * Gets the player move based on the keyboard input.
      *
      */
     public void getKeyboardMove(Map map){
@@ -429,6 +431,10 @@ public class Player {
         }
     }
 
+    /**
+     * Changes the player stats based on the OnlinePlayer object.
+     * @param onlinePlayer
+     */
     public void changePlayerStats(OnlinePlayer onlinePlayer){
 
         this.pos = onlinePlayer.pos;
@@ -451,6 +457,10 @@ public class Player {
         }
     }
 
+    /**
+     * Checks if the player has enough experience to upgrade.
+     * If so, the player's level is increased and the upgrade screen is displayed.
+     */
     public void checkUpgrade(){
         if (!UpgradeCardScreen.isUpgrading && this.experience >= this.experienceToNextLevel){
             this.playerLevel += 1;
@@ -464,6 +474,10 @@ public class Player {
         }
     }
 
+    /**
+     * Adds experience to the player.
+     * @param experience
+     */
     public void gainExperience(double experience){
         this.experience += experience;
     }

@@ -12,18 +12,13 @@ import java.util.ArrayList;
  */
 public class Room {
 
-	/**
-	 * le point de départ.
-	 */
+
 	public Point start;
-	/**
-	 * le point de fin.
-	 */
 	public Point end;
 
 	/**
 	 * Constructeur de Room.
-	 * Sert à créer un objet Room.
+	 * Une room est représentée un rectangle d'une certaine dimension.
 	 *
 	 * @param startX    the start x
 	 * @param startY    the start y
@@ -45,8 +40,7 @@ public class Room {
 	public Room(){}
 
 	/**
-	 * colision avec une salle.
-	 * Sert à vérifier si une salle est en collision avec une autre salle.
+	 * Vérifie pour chaque salles si elles se chevauche avec la salle actuelle.
 	 * @return the boolean
 	 */
 	public boolean isColliding(ArrayList<Room> rooms){

@@ -260,6 +260,11 @@ public class Utils {
     }
 
 
+    /**
+     * Récupère l'adresse IP du serveur depuis le fichier texte de configuration server_address.txt.
+     *
+     * @return L'adresse IP du serveur
+     */
     public static String getIpAddress(){
         String filePath = "server_address.txt"; // Chemin du fichier à la racine du projet
         BufferedReader reader = null;

@@ -5,18 +5,36 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * Classe utilitaire pour récupérer les propriétés du serveur.
+ */
 public class GetConfig {
+
+    /**
+     * Récupère une propriété de type int.
+     * @param key
+     * @return
+     */
     public static int getIntProperty(String key) {
         Properties prop = loadPropertiesFile();
         String info = prop.getProperty(key);
         return Integer.parseInt(info);
     }
 
+    /**
+     * Récupère une propriété de type String.
+     * @param key
+     * @return
+     */
     public static String getStringProperty(String key) {
         Properties prop = loadPropertiesFile();
         return prop.getProperty(key);
     }
 
+    /**
+     * Charge le fichier de  du server.
+     * @return
+     */
     private static Properties loadPropertiesFile() {
         Properties prop = new Properties();
         try (FileReader reader = new FileReader("core/src/server_config.properties")) {

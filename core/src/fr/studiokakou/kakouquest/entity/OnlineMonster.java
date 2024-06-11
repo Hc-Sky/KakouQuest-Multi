@@ -1,11 +1,8 @@
 package fr.studiokakou.kakouquest.entity;
 
-import com.badlogic.gdx.Gdx;
 import fr.studiokakou.kakouquest.map.Floor;
-import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.OnlinePlayer;
-import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.network.GameServer;
 import fr.studiokakou.network.ServerMap;
@@ -15,42 +12,42 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class OnlineMonster {
+
+    // Online monster stats
     public String name;
     public Point pos;
     public float speed;
     public int damage;
     public int xp;
-
-    /** The time pause between attacks. */
     public float attackPause;
-
-    public LocalDateTime currentAttackTime;
     public int hp;
     public int detectRange;
+    public int id;
 
-    public float height;
-    public float width;
+    // register the last attack time
+    public LocalDateTime currentAttackTime;
 
     //animation vars
+    public float height;
+    public float width;
     public boolean isRunning;
     public boolean isFlip;
+    public String idleAnimationPath;
+    public String runAnimationPath;
+    public static float delta = 0.016664876f; // used to match the 60fps of the client for the movement
 
+    // death vars
     public boolean isDying;
     public boolean isDead;
 
+    // hit vars
     public boolean isRed;
     public LocalDateTime hitStart=null;
     public float bloodStateTime=0f;
-
-    public String idleAnimationPath;
-    public String runAnimationPath;
-
-    public static float delta = 0.016664876f;
-
     public ArrayList<String> player_hitted = new ArrayList<>();
 
-    public int id;
 
+    // Constructor
     public OnlineMonster(String name, String idleAnimationPath, String runAnimationPath, int hp, int damage, float attackPause, float speed, int detectRange, int currentLevel, double height, double width, int xp){
         this.name = name;
         this.speed = speed;
@@ -72,6 +69,7 @@ public class OnlineMonster {
         this.xp = xp;
     }
 
+    // Constructor from a Monster object
     public OnlineMonster (Monster monster){
         this.name = monster.name;
         this.speed = monster.speed;
@@ -97,25 +95,36 @@ public class OnlineMonster {
 
     }
 
+    // Empty constructor for Kryo
     public OnlineMonster(){}
 
+    // Set the id
     public void setId(int id){
         this.id = id;
     }
 
+    // Set the position
     public void place(Point pos){
         this.pos = pos;
     }
 
+    // upgrade the monster stats based on the current floor of the map
     public void upgradeStats(int currentLevel){
         this.hp = this.hp +(this.hp * currentLevel/4);
         this.damage = this.damage + (this.damage * currentLevel /4);
+        if (currentLevel < 12) {
+            this.speed = this.speed * (1 + (float) currentLevel /10);
+        } else {
+            this.speed = this.speed * (1 + (float) 12 / 20);
+        }
     }
 
+    // get the center of the monster
     public Point center(){
         return new Point(this.pos.x+ this.width /2,this.pos.y+ this.height /4);
     }
 
+    // checks if the monster can get to his next position (if he will still be on a floor)
     public boolean canMove(Point orientation, ServerMap map){
         if (this.isDead || this.isDying){
             return false;
@@ -136,6 +145,7 @@ public class OnlineMonster {
         return map.arePointsOnFloor(points);
     }
 
+    // get the closest player to the monster to chase him
     public OnlinePlayer getClosestPlayer(){
         OnlinePlayer closestPlayer = null;
         double minDistance = Double.MAX_VALUE;
@@ -149,9 +159,10 @@ public class OnlineMonster {
         return closestPlayer;
     }
 
+    // move the monster
     public void move(ServerMap map){
-        OnlinePlayer player = this.getClosestPlayer();
 
+        OnlinePlayer player = this.getClosestPlayer();
 
         if (player==null){
             return;
@@ -163,13 +174,12 @@ public class OnlineMonster {
 
         Point playerPos = player.pos;
 
-        if (Utils.distance(playerPos, this.pos)<=10){
+        if (Utils.distance(playerPos, this.pos)<=10){   // if the player is close enough, attack him
             this.attack(player);
             return;
         }
 
-        if (detectPlayer(playerPos)){
-
+        if (detectPlayer(playerPos)){     // if the player is in the detect range, chase him
             this.isRunning = true;
             this.getOrientation(player);
             Point orientation = Point.getOrientation(this.pos, playerPos);
@@ -184,16 +194,19 @@ public class OnlineMonster {
         }
     }
 
+    // attack the player
     private void attack(OnlinePlayer player) {
         if (this.isDying || !player.hasPlayerSpawn){
             return;
         }
+        // if it has been more than the attack pause since the last attack, attack the player
         if (this.currentAttackTime==null || this.currentAttackTime.plusNanos((long) (1000000*this.attackPause)).isBefore(LocalDateTime.now())){
             GameServer.server.sendToTCP(GameServer.getIdWithUsername(player.username), new PlayerHitMessage(this));
             this.currentAttackTime = LocalDateTime.now();
         }
     }
 
+    // get the orientation of the monster based on the player position (flip the sprite or not)
     public void getOrientation(OnlinePlayer player){
         if (player.center().x-1<this.center().x){
             this.isFlip = true;
@@ -202,6 +215,7 @@ public class OnlineMonster {
         }
     }
 
+    // update the monster hit
     public void updateHit(){
         if (hitStart!= null && this.isRed && this.hitStart.plusNanos(200000000).isBefore(LocalDateTime.now())){
             this.isRed=false;
@@ -213,6 +227,7 @@ public class OnlineMonster {
         }
     }
 
+    // check if the player is in the detect range of the monster
     public boolean detectPlayer(Point playerPos){
         return Utils.distance(this.pos, playerPos) <= this.detectRange;
     }

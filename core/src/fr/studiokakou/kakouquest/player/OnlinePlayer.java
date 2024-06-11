@@ -13,17 +13,17 @@ import java.time.LocalDateTime;
 public class OnlinePlayer {
     public String username;
 
-    public Point pos; // The current position of the player
-    Point lastPos; // The last position of the player
+    public Point pos;
+    Point lastPos;
 
 
     // Player stats
-    public int hp; // The health points of the player
-    public int max_hp; // The maximum health points of the player
-    public int strength; // The strength of the player
-    public float speed; // The speed of the player
-    public float stamina; // The stamina of the player
-    public int max_stamina; // The maximum stamina of the player
+    public int hp;
+    public int max_hp;
+    public int strength;
+    public float speed;
+    public float stamina;
+    public int max_stamina;
     public boolean isDead;
     public int playerLevel;
     public double experience;
@@ -58,15 +58,21 @@ public class OnlinePlayer {
     boolean flip = false;
     boolean isRunning = false;
 
-    // si le joueur est en train de spawn
     public boolean isPlayerSpawning = false;
-    // si le joueur a spawn
     public boolean hasPlayerSpawn = false;
 
     float bloodStateTime;
 
+    /**
+     * OnlinePlayer constructor for KryoNet.
+     */
     public OnlinePlayer() {}
 
+    /**
+     * Constructor for creating an OnlinePlayer instance based on a local Player object.
+     *
+     * @param player The local Player object to be converted to an OnlinePlayer.
+     */
     public OnlinePlayer(Player player){
         this.username = OnlineGameScreen.username;
 
@@ -115,23 +121,47 @@ public class OnlinePlayer {
 
     }
 
+    /**
+     * Inflicts damage on the player by reducing their health points.
+     *
+     * @param damage The amount of damage to be inflicted on the player.
+     */
     public void takeDamage(int damage){
         this.hp -= damage;
         this.bloodStateTime = 0f;
     }
 
+    /**
+     * Equips the player with the specified melee weapon.
+     *
+     * @param meleeWeapon The OnlineMeleeWeapon object representing the weapon to be equipped.
+     */
     public void addMeleeWeapon(OnlineMeleeWeapon meleeWeapon){
         this.currentWeapon = meleeWeapon;
     }
 
+    /**
+     * Calculates the center point of the player's hitbox or collision box.
+     *
+     * @return The center Point of the player's hitbox.
+     */
     public Point center(){
         return new Point(this.pos.x+((float) this.texture_width /2), this.pos.y+((float) this.texture_height /4));
     }
 
+    /**
+     * Calculates the center point of the player's sprite for rendering purposes.
+     *
+     * @return The center Point of the player's sprite.
+     */
     public Point textureCenter(){
         return new Point(this.pos.x+((float) this.texture_width /2), this.pos.y+((float) this.texture_height /2));
     }
 
+    /**
+     * Draws the player's attack animation.
+     * @param batch
+     */
     public void showAttack(SpriteBatch batch){
         if (this.currentWeapon == null){
             return;
@@ -152,6 +182,11 @@ public class OnlinePlayer {
     }
 
 
+    /**
+     * Draws the player's sprite.
+     *
+     * @param batch The SpriteBatch object used to draw the player's sprite.
+     */
     public void draw(SpriteBatch batch) {
         TextureRegion currentFrame;
         if (this.isRunning) {

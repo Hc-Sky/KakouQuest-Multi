@@ -5,28 +5,19 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import fr.studiokakou.kakouquest.network.GameClient;
 import fr.studiokakou.kakouquest.screens.OnlineGameScreen;
 
-import java.util.ArrayList;
 
 /**
  * Represents a camera object used for rendering the game view.
  */
 public class Camera {
-    /** The orthographic camera instance. */
     public static OrthographicCamera camera;
 
-    /** The player object associated with the camera. */
     Player player;
 
-    /** Default zoom value for the camera. */
+    // Camera constants
     public static float DEFAULT_ZOOM = (float) (Gdx.graphics.getHeight() * 2.5) / 720;
-
-    /** Distance in y-axis between the camera and the player. */
     public static float CAM_Y_DISTANCE = 53;
-
-    /** Distance in x-axis between the camera and the player. */
     public static float CAM_X_DISTANCE = 95;
-
-    /** The zoom level of the camera. */
     public float zoom;
 
     /**
@@ -59,7 +50,7 @@ public class Camera {
      */
     public void update(){
 
-        if (!player.hasPlayerSpawn){
+        if (!player.hasPlayerSpawn){  // If the player has not spawned yet, center the camera on the first player that has spawned (spectator)
             for (OnlinePlayer onlinePlayer : OnlineGameScreen.onlinePlayers){
                 if (onlinePlayer.hasPlayerSpawn){
                     Camera.camera.position.x = onlinePlayer.center().x;
@@ -67,7 +58,7 @@ public class Camera {
                     break;
                 }
             }
-        } else {
+        } else {   // If the player has spawned, center the camera on the player
             if (Camera.camera.position.x + Camera.CAM_X_DISTANCE < this.player.center().x){
                 Camera.camera.position.x = this.player.center().x - Camera.CAM_X_DISTANCE;
             }

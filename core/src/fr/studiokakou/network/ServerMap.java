@@ -9,43 +9,27 @@ import java.util.Arrays;
 
 public class ServerMap {
     public ArrayList<OnlineFloor> floors = new ArrayList<>();
+
     public int map_height;
-    /**
-     * The width of the map.
-     */
     public int map_width;
-    /**
-     * The list of rooms.
-     */
+
     public ArrayList<Room> rooms =  new ArrayList<>();
-    /**
-     * The list of bridges.
-     */
     public ArrayList<Bridge> bridges = new ArrayList<>();
-    /**
-     * The list of walls.
-     */
     public ArrayList<OnlineWall> walls = new ArrayList<>();
-    /**
-     * The minimum height of a room.
-     */
+
     public static int ROOM_MIN_HEIGHT=7;
-    /**
-     * The minimum width of a room.
-     */
     public static int ROOM_MIN_WIDTH=7;
-    /**
-     * The maximum height of a room.
-     */
     public static int ROOM_MAX_HEIGHT=21;
-    /**
-     * The maximum width of a room.
-     */
     public static int ROOM_MAX_WIDTH=21;
 
     public ArrayList<OnlineChest> chests = new ArrayList<>();
 
 
+    /**
+     * Constructor.
+     * @param width
+     * @param height
+     */
     public ServerMap(int width, int height){
         this.map_height = height;
         this.map_width = width;
@@ -55,6 +39,9 @@ public class ServerMap {
 
     public ServerMap(){}
 
+    /**
+     * Initializes the map.
+     */
     public void initMap(){
 
         generateRooms();
@@ -204,10 +191,20 @@ public class ServerMap {
         return true;
     }
 
+    /**
+     * Returns the stairs position.
+     *
+     * @return the stairs position
+     */
     public Point getStairsPos(){
         return this.rooms.get(this.rooms.size()-1).getCenterOutOfMap().add(-8, -8);
     }
 
+    /**
+     * Generates interactive elements.
+     *
+     * @param currentLevel the current level
+     */
     public void genInteractive(int currentLevel){
 
         this.chests.clear();

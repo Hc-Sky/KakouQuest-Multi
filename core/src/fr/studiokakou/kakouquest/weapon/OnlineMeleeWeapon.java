@@ -1,6 +1,8 @@
 package fr.studiokakou.kakouquest.weapon;
 
-
+/**
+ * Classe représentant une arme de mêlée en ligne.
+ */
 public class OnlineMeleeWeapon {
 
     public String name;
@@ -18,6 +20,16 @@ public class OnlineMeleeWeapon {
     //weapon dimensions
     public float size;
 
+    /**
+     * Constructeur de la classe OnlineMeleeWeapon.
+     * @param name
+     * @param texturePath
+     * @param damage
+     * @param resistance
+     * @param attackRange
+     * @param attackSpeed
+     * @param size
+     */
     public OnlineMeleeWeapon(String name, String texturePath, int damage, int resistance, float attackRange, float attackSpeed, float size){
         //weapon stats
         this.name = name;

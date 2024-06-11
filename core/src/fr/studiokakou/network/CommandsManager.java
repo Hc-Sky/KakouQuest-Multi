@@ -5,15 +5,25 @@ import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 
 import java.util.Scanner;
 
+/**
+ * La classe CommandsManager est un thread permettant de gérer les commandes entrées par l'utilisateur dans la console.
+ */
 public class CommandsManager implements Runnable {
     GameServer gameServer;
     Scanner scanner;
 
+    /**
+     * Constructeur de la classe CommandsManager.
+     * @param gameServer Le serveur de jeu.
+     */
     public CommandsManager(GameServer gameServer){
         this.gameServer=gameServer;
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Méthode appelée lors de l'exécution du thread.
+     */
     @Override
     public void run() {
         while (true){
@@ -23,6 +33,10 @@ public class CommandsManager implements Runnable {
         }
     }
 
+    /**
+     * Méthode permettant de traiter une commande entrée par l'utilisateur.
+     * @param command La commande entrée par l'utilisateur.
+     */
     public void computeCommand(String command){
         if (command.startsWith("list")){
             String[] splitCommand = command.split(" ");

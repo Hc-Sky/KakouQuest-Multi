@@ -17,6 +17,12 @@ import fr.studiokakou.network.message.PlayerHitMessage;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+/**
+ * SharedFunctions class contains functions that are shared between the server and the client.
+ * This is a particularity of the KryoNet library.
+ * Because you have to specify every class that you want to send over the network, I created a Online Version of
+ * every class because things like Texture or Animation can't be send over the network.
+ */
 public class SharedFunctions {
 
     public static void getSharedRegister(Kryo kryo){

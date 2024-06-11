@@ -2,6 +2,9 @@ package fr.studiokakou.network;
 
 import java.io.IOException;
 
+/**
+ * Classe principale pour lancer le serveur de jeu.
+ */
 public class RunServer {
     public static void main(String[] args) {
         GameServer gameServer = new GameServer();

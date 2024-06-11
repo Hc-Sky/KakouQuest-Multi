@@ -4,7 +4,7 @@ import fr.studiokakou.kakouquest.GetProperties;
 
 /**
  * Classe pour gérer les touches attribuées.
- * Cette classe permet de récupérer les touches attribuées à différentes actions dans le jeu.
+ * Cette classe permet de récupérer les touches attribuées à différentes actions dans le jeu depuis un fichier de paramètre des touches.
  */
 public class Keybinds {
     /** Touche pour se déplacer vers le haut (Z). */

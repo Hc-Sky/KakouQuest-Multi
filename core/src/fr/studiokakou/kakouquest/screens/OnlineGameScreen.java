@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.hud.Hud;
@@ -26,8 +25,10 @@ import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.StaticsMeleeWeapon;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
+/**
+ * The game screen of the client
+ */
 public class OnlineGameScreen implements Screen {
 
     //network infos
@@ -62,6 +63,10 @@ public class OnlineGameScreen implements Screen {
     // Temps écoulé depuis le début du jeu pour les animations.
     public static float stateTime=0f;
 
+    /**
+     * Constructeur de l'écran de jeu
+     * @param game
+     */
     public OnlineGameScreen(GameSpace game){
         username = UsernameSreen.username;
 
@@ -84,8 +89,8 @@ public class OnlineGameScreen implements Screen {
         this.cam = new Camera(this.player);
 
 
+        //init & start client
         gameClient = new GameClient(ipAdress, port, udp, player);
-
         gameClient.startClient();
 
 
@@ -93,25 +98,25 @@ public class OnlineGameScreen implements Screen {
 
     @Override
     public void show() {
+        // set the cursor icon
         OnlineGameScreen.stateTime=0f;
         Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
         pm.dispose();
 
+        //init textures
         Interactive.init();
         Chest.init();
+        UpgradeCardScreen.initUpgradeCards();
 
+        //init hud
         this.hud = new Hud(this.cam.zoom);
-
         font = new BitmapFont();
         hud.setFont(font);
 
-        UpgradeCardScreen.initUpgradeCards();
+        gameClient.client.sendTCP("getMap"); //asks server map
 
-
-        gameClient.client.sendTCP("getMap");
-
-        while (!player.hasPlayerSpawn){
+        while (!player.hasPlayerSpawn){    //wait for player spawn
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -123,7 +128,7 @@ public class OnlineGameScreen implements Screen {
     }
 
     @Override
-    public void render(float delta) {
+    public void render(float delta) {    //called on each frame
         OnlineGameScreen.stateTime += delta;
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
@@ -133,6 +138,7 @@ public class OnlineGameScreen implements Screen {
         Gdx.gl.glClearColor(34/255f, 34/255f, 34/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // player movement
         if (player.hasPlayerSpawn){
             if (!UpgradeCardScreen.isUpgrading){
                 player.getKeyboardMove(map);
@@ -144,10 +150,10 @@ public class OnlineGameScreen implements Screen {
 
         map.refreshInteract();
 
+        // send player update to server
         if (!player.isDead){
             gameClient.sendPlayer(player);
         }
-
         cam.update();
 
         batch.setProjectionMatrix(Camera.camera.combined);
@@ -173,7 +179,7 @@ public class OnlineGameScreen implements Screen {
             this.hud.drawXpBar(shapeRenderer);
         }
 
-        if (UpgradeCardScreen.isUpgrading){
+        if (UpgradeCardScreen.isUpgrading){   // if player is upgrading show upgrade cards
             upgradeBatch.begin();
             UpgradeCardScreen.draw(upgradeBatch, player);
             upgradeBatch.end();
