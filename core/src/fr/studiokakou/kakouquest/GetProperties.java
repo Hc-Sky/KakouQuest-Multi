@@ -53,7 +53,7 @@ public class GetProperties {
      */
     private static Properties loadPropertiesFile() {
         Properties prop = new Properties();
-        try (FileReader reader = new FileReader("core/src/settings.properties")) {
+        try (FileReader reader = new FileReader("settings.properties")) {
             prop.load(reader);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Le fichier settings.properties n'a pas été trouvé", e);
