@@ -101,7 +101,6 @@ public class Monster {
     // when a player hit this monster
     public boolean hit(Player player){
         if (!this.player_hitted.contains(OnlineGameScreen.username)){
-            System.out.println("hit : "+this.id +" by "+OnlineGameScreen.username);
             this.takeDamage(player);
             this.bloodStateTime=0f;
             this.isRed=true;

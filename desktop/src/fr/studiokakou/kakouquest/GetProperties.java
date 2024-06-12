@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public class GetProperties {
     public static boolean getBoolProperty(String key) throws IOException {
-        FileReader reader = new FileReader("core/src/settings.properties");
+        FileReader reader = new FileReader("settings.properties");
 
         Properties prop = new Properties();
         prop.load(reader);
@@ -22,7 +22,7 @@ public class GetProperties {
     }
 
     public static int getIntProperty(String key) throws IOException {
-        FileReader reader = new FileReader("core/src/settings.properties");
+        FileReader reader = new FileReader("settings.properties");
 
         Properties prop = new Properties();
         prop.load(reader);

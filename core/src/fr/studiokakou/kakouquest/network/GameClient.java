@@ -112,7 +112,6 @@ public class GameClient implements Listener {
 
     public void disconnected(Connection connection) {
         isConnected = false;
-        System.out.println("You got disconnected from the game");
         System.exit(0);
     }
 
@@ -132,7 +131,6 @@ public class GameClient implements Listener {
         if (object instanceof ChangePlayerStatsMessage){
             ChangePlayerStatsMessage changePlayerStatsMessage = (ChangePlayerStatsMessage) object;
 
-            System.out.println("received a stats change");
             player.changePlayerStats(changePlayerStatsMessage.onlinePlayer);
         }
 
@@ -161,7 +159,6 @@ public class GameClient implements Listener {
             PlayerHitMessage playerHitMessage = (PlayerHitMessage) object;
 
             OnlineGameScreen.player.takeDamage(playerHitMessage.monster.damage);
-            System.out.println("You got hit by a monster : "+OnlineGameScreen.player.hp);
         }
 
         if (object instanceof ArrayList){
