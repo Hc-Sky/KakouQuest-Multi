@@ -68,7 +68,7 @@ public class OnlineGameScreen implements Screen {
      * @param game
      */
     public OnlineGameScreen(GameSpace game){
-        username = UsernameSreen.username;
+        username = UsernameScreen.username;
 
         ipAdress = Utils.getIpAddress();
 
