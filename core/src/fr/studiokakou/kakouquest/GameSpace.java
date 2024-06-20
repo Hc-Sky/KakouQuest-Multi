@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
-import fr.studiokakou.kakouquest.screens.UsernameSreen;
+import fr.studiokakou.kakouquest.screens.UsernameScreen;
 
 /**
  * La classe GameSpace représente l'application principale du jeu.
@@ -45,7 +45,7 @@ public class GameSpace extends Game {
 		this.font = new BitmapFont();
 
 
-		this.setScreen(new UsernameSreen(this));
+		this.setScreen(new UsernameScreen(this));
 	}
 
 	/**
